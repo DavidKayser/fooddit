@@ -1,0 +1,14 @@
+body {
+    background:rgb(206, 206, 206);
+}
+
+.page {
+    max-width:80%;
+    margin: 0 auto;
+    padding:0 20px;
+    overflow:hidden;
+}
+
+.float-left {
+    float:left;
+}

@@ -1,0 +1,35 @@
+.reddit-article {
+    background:white;
+    padding:20px;
+    margin:20px auto;
+}
+
+.author-image{
+    width:40px;
+    height:40px;
+    border-radius:100%;
+}
+
+.reddit-header, .reddit-footer{
+    overflow:hidden;
+}
+
+.reddit-header p, .reddit-footer p {
+    margin:0 0 0 20px;
+    line-height:40px;
+    font-size:12px;
+    color:rgb(75, 75, 75);
+}
+
+.reddit-footer p:first-child {
+    margin:0;
+}
+
+.community {
+    font-weight:bold;
+}
+
+.reddit-image{
+    width:100%;
+    height:auto;
+}

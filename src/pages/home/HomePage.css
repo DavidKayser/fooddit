@@ -1,4 +1,9 @@
-.page {
-    background:rgb(206, 206, 206);
-    padding:0 20px;
+.main-content {
+    width:60%;
+    float:left;
+}
+
+.sidebar {
+    width:25%;
+    float:left;
 }
