@@ -1,33 +1,56 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+export const loadReddits = createAsyncThunk('reddits/loadReddits', async () => {
+    const response = await fetch(`https://www.reddit.com/r/popular.json`);
+    const json = await response.json();
+    const posts =  json.data.children.map((reddit) => {
+        const postData = {
+            id: reddit.data.id,
+            subreddit: reddit.data.subreddit_name_prefixed,
+            title: reddit.data.title,
+            mediaType: reddit.data.post_hint,
+            media: reddit.data.url_overridden_by_dest,
+            author: reddit.data.author,
+            authorImage: reddit.data.id,
+            upvotes: reddit.data.ups,
+            postedOn: reddit.data.created_utc,
+            numberOfComments: reddit.data.num_comments
+        }
+        return postData;
+    });
+    return posts;
+});
 
 const redditsSlice = createSlice({
     name: 'reddits',
     initialState: {
-        reddits: [
-            {
-                id: 1,
-                community: "r/something",
-                title: "Test Title",
-                image: "https://i.redd.it/f6b7703uwko81.gif",
-                author: "David K",
-                authorImage: "https://b.thumbs.redditmedia.com/VUqn5Ks9yX4f4pbLMk6ESjN-1QuJSLr51YWBHXu_BIk.jpg",
-                upvotes: "34.3k",
-                postedOn: "Jan 2nd, 2012"
-            },
-            {
-                id: 2,
-                community: "r/somethingElse",
-                title: "Test Title",
-                image: "https://i.imgur.com/tdiOx5E.jpg",
-                author: "David K",
-                authorImage: "https://b.thumbs.redditmedia.com/VUqn5Ks9yX4f4pbLMk6ESjN-1QuJSLr51YWBHXu_BIk.jpg",
-                upvotes: "3",
-                postedOn: "Jan 2nd, 2012"
-            }
-        ]
+        reddits: [],
+        avatars: [],
+        isLoadingReddits: false,
+        failedToLoadReddits: false
+    },
+    reducers: {},
+    extraReducers: builder => {
+        builder
+            //loading reddits
+            .addCase(loadReddits.pending, (state) => {
+                state.isLoadingReddits = true;
+                state.failedToLoadReddits = false;
+            })
+            .addCase(loadReddits.fulfilled, (state, action) => {
+                state.isLoadingReddits = false;
+                state.failedToLoadReddits = false;
+                state.reddits = action.payload;
+            })
+            .addCase(loadReddits.rejected, (state) => {
+                state.isLoadingReddits = false;
+                state.failedToLoadReddits = true;
+                state.reddits = [];
+            })
     }
 });
 
 export const selectReddits = (state) => state.reddits.reddits;
+export const selectIsLoading = (state) => state.reddits.isLoadingReddits;
 
 export default redditsSlice.reducer;

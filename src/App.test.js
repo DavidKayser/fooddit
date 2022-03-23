@@ -3,8 +3,11 @@ import { Provider } from 'react-redux';
 import store from './app/store';
 import App from './app/App';
 
-test('renders learn react link', () => {
-  render(<Provider store={store} ><App /></Provider>);
-  const linkElement = screen.getByText(/popular/i);
-  expect(linkElement).toBeInTheDocument();
+describe("<App />", () => {
+  it("Renders <App /> component correctly", () => {
+    render(<Provider store={store}><App /></Provider>);
+    expect(
+      screen.getByText(/popular/i)
+    ).toBeInTheDocument();
+  });
 });
