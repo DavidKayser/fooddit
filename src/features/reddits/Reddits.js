@@ -9,7 +9,7 @@ const Reddits = () => {
     const reddits = useSelector(selectReddits);
 
     useEffect(() => {
-        dispatch(loadReddits());
+        dispatch(loadReddits("popular"));
     }, [dispatch]);
 
     return (
@@ -27,7 +27,7 @@ const Reddits = () => {
                             <img className="reddit-image" src={reddit.media} alt="media" />
                         )}
                         {reddit.mediaType === "link" && (
-                            <a href={reddit.media} target="_blank">LINK</a>
+                            <a href={reddit.media} target="_blank" rel="noreferrer">LINK</a>
                         )}
                         <div className="reddit-footer">
                             <p className="float-left">{reddit.upvotes} upvotes</p>

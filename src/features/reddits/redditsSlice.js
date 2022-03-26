@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import redditApi from '../../api/reddit-api';
 
-export const loadReddits = createAsyncThunk('reddits/loadReddits', async () => {
-    const response = await fetch(`https://www.reddit.com/r/popular.json`);
-    const json = await response.json();
-    const posts =  json.data.children.map((reddit) => {
+
+//Run API call and trim function
+export const loadReddits = createAsyncThunk('reddits/loadReddits', async (topic) => {
+    const response = await redditApi(topic);
+    const posts =  response.data.children;
+    const trimmedReddit = posts.map((reddit) => {
         const postData = {
             id: reddit.data.id,
             subreddit: reddit.data.subreddit_name_prefixed,
@@ -11,14 +14,13 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async () => {
             mediaType: reddit.data.post_hint,
             media: reddit.data.url_overridden_by_dest,
             author: reddit.data.author,
-            authorImage: reddit.data.id,
             upvotes: reddit.data.ups,
             postedOn: reddit.data.created_utc,
             numberOfComments: reddit.data.num_comments
         }
         return postData;
     });
-    return posts;
+    return trimmedReddit;
 });
 
 const redditsSlice = createSlice({
