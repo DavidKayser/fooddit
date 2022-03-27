@@ -27,7 +27,6 @@ const redditsSlice = createSlice({
     name: 'reddits',
     initialState: {
         reddits: [],
-        avatars: [],
         isLoadingReddits: false,
         failedToLoadReddits: false
     },
@@ -38,6 +37,7 @@ const redditsSlice = createSlice({
             .addCase(loadReddits.pending, (state) => {
                 state.isLoadingReddits = true;
                 state.failedToLoadReddits = false;
+                state.reddits = [];
             })
             .addCase(loadReddits.fulfilled, (state, action) => {
                 state.isLoadingReddits = false;
