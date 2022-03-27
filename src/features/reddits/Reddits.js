@@ -11,7 +11,7 @@ const Reddits = () => {
     const isLoading = useSelector(selectIsLoading);
 
     useEffect(() => {
-        dispatch(loadReddits("popular"));
+        dispatch(loadReddits("food.json"));
     }, [dispatch]);
 
     return (
