@@ -1,9 +1,32 @@
-.reddit-article {
+.reddits-previews {
+    position:relative;
+}
+
+.reddit-article, .reddit-loading-article {
     background:white;
     padding:20px;
     margin:20px auto;
     border: 1px solid #8a8a8a;
     border-radius:5px;
+}
+
+.reddit-loading-article {
+    padding: 0 20px;
+}
+
+.reddit-loading-header, .reddit-loading-footer, .reddit-loading-image {
+    height:40px;
+    width:100%;
+    margin:30px auto;
+    background:grey;
+}
+
+.reddit-loading-image {
+    height:200px;
+}
+
+.reddit-loading-article {
+    opacity: 0.25;
 }
 
 .author-image{

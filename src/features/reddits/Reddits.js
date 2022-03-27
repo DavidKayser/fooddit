@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectReddits, loadReddits } from "./redditsSlice";
-import './Reddits.css';
+import { selectReddits, selectIsLoading, loadReddits } from "./redditsSlice";
+import "./Reddits.css";
 import { useEffect } from "react";
+import { Loading } from "../../components/loading/Loading";
 
 const Reddits = () => {
     const dispatch = useDispatch();
     const reddits = useSelector(selectReddits);
+    const isLoading = useSelector(selectIsLoading);
 
     useEffect(() => {
         dispatch(loadReddits("popular"));
@@ -16,6 +18,17 @@ const Reddits = () => {
         <section className="main-content">
             <h2>Popular Posts</h2>
             <div className="reddits-previews">
+                {isLoading && (
+                    <div>
+                    <Loading />
+                    <article className="reddit-loading-article">
+                        <div className="reddit-loading-header"></div>
+                        <div className="reddit-loading-image">
+                        </div>
+                        <div className="reddit-loading-footer"></div>
+                    </article>
+                    </div>
+                )}
                 {Object.values(reddits).map((reddit, index) => (
                     <article className="reddit-article" key={index}>
                         <div className="reddit-header">
