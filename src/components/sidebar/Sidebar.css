@@ -1,14 +1,24 @@
 .subreddit-list {
     background:white;
     padding:15px;
-    margin:45px auto 20px;
-    border: 1px solid #8a8a8a;
-    border-radius:5px;
+    margin:0 auto 20px;
+    border-right: 1px solid #8a8a8a;
+    border-bottom: 1px solid #8a8a8a;
+    border-left: 1px solid #8a8a8a;
+    border-radius:0 0 5px 5px;
 }
 
-h3 {
-    font-size:14px;
-    margin:0 0 5px;
+#filter-title {
+    background:green;
+    border-top: 1px solid #8a8a8a;
+    border-right: 1px solid #8a8a8a;
+    border-left: 1px solid #8a8a8a;
+    color:white;
+    max-width:100%;
+    line-height:40px;
+    margin:0;
+    padding:0 10px;
+    border-radius: 5px 5px 0 0;
 }
 
 ul {

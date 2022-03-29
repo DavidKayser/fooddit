@@ -1,26 +1,30 @@
 import './App.css';
 import { 
-  BrowserRouter as Router,
   Routes,
-  Route
+  Route,
+  useLocation
  } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import HomePage from '../pages/home/HomePage';
-import Categories from '../components/Categories';
-
+import Single from '../components/single/Single';
 
 
 function App() {
+  const location = useLocation();
+  const state = location.state;
   return (
-    <Router>
+    <div>
       <Header />
-      <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path='/:title' >
-            
-          </Route>
+      <Routes location={state?.backgroundLocation || location}>
+          <Route index element={<HomePage />} />
       </Routes>
-    </Router>
+      
+      {state?.backgroundLocation && (
+        <Routes>
+          <Route path="/:id/:title" element={<Single />} />
+        </Routes>
+      )}
+      </div>
   );
 }
 

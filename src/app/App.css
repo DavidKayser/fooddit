@@ -1,5 +1,5 @@
 body {
-    background:rgb(206, 206, 206);
+    background:rgb(205, 207, 201);
 }
 
 .page {
@@ -11,4 +11,12 @@ body {
 
 .float-left {
     float:left;
+}
+
+h2{
+    font-size:16px;
+}
+
+h3 {
+    font-size:14px;
 }

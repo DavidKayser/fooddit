@@ -25,8 +25,8 @@ const Sidebar = () => {
     
     return (
         <section className="sidebar">
+            <h3 id="filter-title">Filter By Cuisine</h3>
             <ul className="subreddit-list">
-            <h3>Filter By Cuisine</h3>
                 {Object.values(foodTypes).map((foodType, index) => (
                     <li
                         className={`cuisine${activeItem === index ? " active" : "" }${activeItem !== undefined && activeItem !== index ? " inactive" : ""}`}

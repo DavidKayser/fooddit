@@ -1,5 +1,5 @@
 import './Header.css';
-import logo from '../../logo.png';
+import logo from '../../foodit.png';
 import { Search } from './Search';
 
 export default function Header() {

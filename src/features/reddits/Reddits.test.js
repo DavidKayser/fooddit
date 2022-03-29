@@ -1,16 +1,23 @@
 import React from 'react';
-import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import store from '../../app/store';
-import App from '../../app/App';
-import redditsReducer, { loadReddits } from "./redditsSlice";
+import Reddits from './Reddits';
+import { loadReddits } from "./redditsSlice";
 import redditApi from '../../api/reddit-api';
 
 jest.mock('../../api/reddit-api');
 
 describe("<Reddits />", () => {
-    describe("Reddit API tests", () => {
-        it("Fetches popular posts from Reddit API", async () => {
+    it("Renders <Reddits /> component correctly", () => {
+        render(<Provider store={store}><Reddits /></Provider>);
+        expect(
+          screen.getByText(/popular/i)
+        ).toBeInTheDocument();
+    });
+
+    describe("reddit API tests", () => {
+        it("fetches popular posts from Reddit API", async () => {
             const topic = "popular";
             const expectedValue = [
                 {
@@ -25,7 +32,6 @@ describe("<Reddits />", () => {
                     numberOfComments: "200"
                 }
             ];
-    
             const mockResponse = {
                 data: {
                     children: [
@@ -46,12 +52,9 @@ describe("<Reddits />", () => {
                 }
             }
             redditApi.mockResolvedValue(mockResponse);
-    
             const loadRedditsResult = await store.dispatch(loadReddits(topic));
             const actualValue = loadRedditsResult.payload;
-            
             expect(actualValue).toEqual(expectedValue);
-    
         });
     });
 
