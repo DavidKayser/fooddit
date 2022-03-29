@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loadReddits } from "../../features/reddits/redditsSlice";
 import "../../features/reddits/Reddits.css";
@@ -7,25 +6,35 @@ import "./Sidebar.css"
 
 const Sidebar = () => {
     const dispatch = useDispatch();
-    const foodTypes = ["thai food", "japanese", "chinese", "indian", "african", "american"];
-    const [filter, setFilter] = useState();
+    const foodTypes = ["thai", "japanese", "chinese", "indian", "african", "american"];
+    const [activeItem, setActiveItem] = useState();
 
-    useEffect(() => {
-        dispatch(loadReddits(`food/search.json?q=${filter}&restrict_sr=1&sr_nsfw=`));
-    }, [filter])
 
-    function handleClick(term) {
-        const termCleaned = term.replace(/\s/g, "%20");
-        setFilter("");
-        setFilter(termCleaned);
+    function handleClick(term, i) {
+        if (activeItem === i) {
+            console.log(activeItem);
+            setActiveItem();
+            dispatch(loadReddits("food.json"));
+            console.log(activeItem);
+        } else {
+            setActiveItem(i);
+            const termCleaned = term.replace(/\s/g, "%20");
+            dispatch(loadReddits(`food/search.json?q=${termCleaned}&restrict_sr=1&sr_nsfw=`));
+        }
     }
     
     return (
         <section className="sidebar">
-            <h2>Subreddits</h2>
             <ul className="subreddit-list">
+            <h3>Filter By Cuisine</h3>
                 {Object.values(foodTypes).map((foodType, index) => (
-                    <li key={index} onClick={() => handleClick(foodType)}>{foodType}</li>
+                    <li
+                        className={`cuisine${activeItem === index ? " active" : "" }${activeItem !== undefined && activeItem !== index ? " inactive" : ""}`}
+                        key={index} 
+                        onClick={() => handleClick(foodType, index)}
+                    >
+                        {foodType}
+                    </li>
                 ))}
             </ul>
         </section>
