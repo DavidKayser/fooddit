@@ -14,17 +14,21 @@ const Reddit = () => {
     const getReddit = reddits.filter(reddit => reddit.id === id);
     const singleReddit = getReddit[0];
 
-    // useEffect(() => {
-    //     dispatch(loadReddits(`r/food/search.json?q=${termCleaned}&restrict_sr=1&sr_nsfw=`));
-    // });
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+    });
 
-    function onDismiss() {
-        navigate(-1);
+    function onDismiss(event) {
+        event.preventDefault();
+            if(event.target === event.currentTarget) {
+                navigate(-1);
+                document.body.style.overflow = 'unset';
+            }
     }
     
     return (
         <div>
-            <div onClick={() => onDismiss()} className="overlay" data-testid="overlay"></div>
+            <div onClick={(event) => onDismiss(event)} className="overlay" data-testid="overlay">
             <section className="modal">
                 {singleReddit && (
                 <article className="reddit-article">
@@ -48,6 +52,7 @@ const Reddit = () => {
                 </article>
                 )}
             </section>
+            </div>
         </div>
     );
 }

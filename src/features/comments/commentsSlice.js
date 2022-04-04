@@ -8,7 +8,10 @@ export const loadComments = createAsyncThunk('comments/loadComments', async (top
     const trimmedComment = posts.map((comment) => {
         const postData = {
             name: comment.data.author,
-            comment: comment.data.body
+            comment: comment.data.body,
+            postedOn: comment.data.created_utc,
+            downVotes: comment.data.downs,
+            upVotes: comment.data.ups
         }
         return postData;
     });

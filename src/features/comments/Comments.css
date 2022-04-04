@@ -1,0 +1,27 @@
+.comment-header, .comment-footer{
+    overflow:hidden;
+}
+
+.comment-header p, .comment-footer p {
+    margin:0 0 0 20px;
+    font-size:12px;
+    color:rgb(75, 75, 75);
+}
+
+.comment-footer{
+    margin-top:20px;
+}
+
+.comment-header p:first-child, .comment-footer p:first-child {
+    margin:0;
+}
+
+.comment-header p:first-child {
+    font-weight:bold;
+}
+
+.comments{
+    margin-bottom:20px;
+    border:1px solid grey;
+    padding:10px;
+}
