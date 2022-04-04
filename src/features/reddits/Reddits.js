@@ -10,9 +10,14 @@ const Reddits = () => {
     const reddits = useSelector(selectReddits);
     const isLoading = useSelector(selectIsLoading);
     const location = useLocation();
+    let { category } = useParams();
 
     useEffect(() => {
-        dispatch(loadReddits("food.json"));
+        if(category) {
+            dispatch(loadReddits(`r/food/search.json?q=${category}&restrict_sr=1&sr_nsfw=`));
+        } else {
+            dispatch(loadReddits("r/food.json"));
+        }
     }, [dispatch]);
 
     function articleRoute(title, id) {
@@ -28,7 +33,7 @@ const Reddits = () => {
                     <div>
                     <Loading />
                     <article className="reddit-loading-article">
-                        <div className="reddit-loading-header"></div>
+                        <div className="reddit-loading-header">loading</div>
                         <div className="reddit-loading-image"></div>
                         <div className="reddit-loading-footer"></div>
                     </article>
@@ -40,16 +45,16 @@ const Reddits = () => {
                             <p className="float-left community">{reddit.subreddit}</p>
                             <p className="float-left">Posted by {reddit.author}</p>
                         </div>
-                        <Link to={articleRoute(reddit.title, reddit.id)}
+                        <Link data-testid="single-link" to={articleRoute(reddit.title, reddit.id)}
                             state={{ backgroundLocation: location }}>   
                         <h3>{reddit.title}</h3>
                         {reddit.mediaType === "image" && (
                             <img className="reddit-image" src={reddit.media} alt="media" />
                         )}
+                        </Link>
                         {reddit.mediaType === "link" && (
                             <a href={reddit.media} target="_blank" rel="noreferrer">LINK</a>
                         )}
-                        </Link>
                         <div className="reddit-footer">
                             <p className="float-left">{reddit.upvotes} upvotes</p>
                             <p className="float-left">{reddit.numberOfComments} Comments</p>

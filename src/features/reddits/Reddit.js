@@ -2,15 +2,21 @@ import React from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { selectReddits, selectIsLoading, loadReddits } from "../../features/reddits/redditsSlice";
-import './Single.css';
+import { selectReddits, selectIsLoading, loadReddits } from "./redditsSlice";
+import Comments from "../comments/Comments";
+import './Reddit.css';
 
-const Single = () => {
+const Reddit = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     let { id } = useParams();
     const reddits = useSelector(selectReddits);
     const getReddit = reddits.filter(reddit => reddit.id === id);
     const singleReddit = getReddit[0];
+
+    // useEffect(() => {
+    //     dispatch(loadReddits(`r/food/search.json?q=${termCleaned}&restrict_sr=1&sr_nsfw=`));
+    // });
 
     function onDismiss() {
         navigate(-1);
@@ -18,9 +24,8 @@ const Single = () => {
     
     return (
         <div>
-            <div onClick={() => onDismiss()} className="overlay"></div>
+            <div onClick={() => onDismiss()} className="overlay" data-testid="overlay"></div>
             <section className="modal">
-                <h3 id="modal-title">Modal</h3>
                 {singleReddit && (
                 <article className="reddit-article">
                     <div className="reddit-header">
@@ -39,6 +44,7 @@ const Single = () => {
                         <p className="float-left">{singleReddit.numberOfComments} Comments</p>
                         <p className="float-left">{singleReddit.postedOn}</p>
                     </div>
+                    <Comments />
                 </article>
                 )}
             </section>
@@ -46,4 +52,4 @@ const Single = () => {
     );
 }
 
-export default Single;
+export default Reddit;

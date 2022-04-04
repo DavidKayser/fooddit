@@ -16,7 +16,8 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (topic)
             author: reddit.data.author,
             upvotes: reddit.data.ups,
             postedOn: reddit.data.created_utc,
-            numberOfComments: reddit.data.num_comments
+            numberOfComments: reddit.data.num_comments,
+            singleLink: reddit.data.permalink
         }
         return postData;
     });
