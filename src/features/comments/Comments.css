@@ -22,6 +22,19 @@
 
 .comments{
     margin-bottom:20px;
-    border:1px solid grey;
     padding:10px;
+    border-radius:10px;
+}
+
+.comments:nth-child(odd) {
+    background:rgb(248, 248, 248);
+}
+
+.comments:nth-child(even) {
+    background:rgb(243, 247, 255);
+}
+
+.comments-list {
+    border-top: 2px solid black;
+    padding-top: 20px;
 }

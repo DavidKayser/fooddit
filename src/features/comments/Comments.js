@@ -14,7 +14,6 @@ const Comments = () => {
     const getReddit = reddits.filter(reddit => reddit.id === id);
     const singleReddit = getReddit[0];
     const commentsLink = singleReddit.singleLink;
-    console.log(comments);
 
     useEffect(() => {
         dispatch(loadComments(`${commentsLink}.json`));
