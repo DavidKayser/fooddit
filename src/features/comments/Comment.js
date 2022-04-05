@@ -1,7 +1,7 @@
 export class Comment {
-    constructor(name, comment, postedOn, downVotes, upVotes, subComments) {
+    constructor(name, body, postedOn, downVotes, upVotes, subComments) {
         this.name = name;
-        this.comment = comment;
+        this.body = body;
         this.postedOn = postedOn;
         this.downVotes = downVotes;
         this.upVotes = upVotes;
