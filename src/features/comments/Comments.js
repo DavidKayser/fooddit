@@ -18,15 +18,15 @@ const Comments = () => {
     useEffect(() => {
         dispatch(loadComments(`${commentsLink}.json`));
     }, [dispatch]);
-    
-    return (
-        <section className="Comments">
-            <h3 id="comments-title">Comments</h3>
-            <div className="comments-list">
-            {comments &&
-            Object.values(comments).map((comment, index) => (
-                <div key={index}>
-                    <article className="comments" >
+
+    function loadSubComments(item, depth) {
+        let commentDepth = depth;
+        commentDepth ++;
+        if(item.subComments) {
+            const subComment = Object.values(item.subComments).map((comment, index) => (
+                <ul className="comment-group sub-comments" key={index}>
+                    <li>
+                    <article className="comments sub-comment" >   
                         <div className="comment-header">
                             <p className="float-left">{comment.name}</p>
                             <p className="float-left">{comment.postedOn}</p>
@@ -37,9 +37,27 @@ const Comments = () => {
                             <p className="float-left">{comment.downVotes}</p>
                         </div>
                     </article>
-                    {comment.subComments &&
-                    Object.values(comment.subComments).map((comment, index) => (
-                        <article className="comments sub-comment" >
+                    </li>
+                    {comment.subComments.length > 0 && (
+                    <li>{loadSubComments(comment, commentDepth)}</li>
+                    )}
+                </ul>
+            ))
+            return subComment;
+        } else {
+            return;
+        }
+    }
+    
+    return (
+        <section className="Comments">
+            <h3 id="comments-title">Comments</h3>
+            <div className="comments-list">
+            {comments &&
+            Object.values(comments).map((comment, index) => (
+                <ul className="comment-group" key={index}>
+                    <li>
+                        <article className="comments" >
                             <div className="comment-header">
                                 <p className="float-left">{comment.name}</p>
                                 <p className="float-left">{comment.postedOn}</p>
@@ -50,8 +68,11 @@ const Comments = () => {
                                 <p className="float-left">{comment.downVotes}</p>
                             </div>
                         </article>
-                    ))}
-                </div>
+                    </li>
+                    {comment.subComments.length > 0 && (
+                    <li>{loadSubComments(comment, 0)}</li>
+                    )}
+                </ul>
                 ))}
             </div>
         </section>

@@ -1,32 +1,30 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import redditApi from '../../api/reddit-api';
-import { Comment } from './Comment';
+
+let depth = 0;
 
 function getSubComments(comment) {
     const subComments = comment.data.replies.data.children;
     const filteredComments = subComments?.filter((x) => x.kind === "t1");
     if (filteredComments.length) {
         const trimmedComment = filteredComments.map((comment) => {
-            const name = comment.data.author;
-            const body = comment.data.body;
-            const postedOn = comment.data.created_utc;
-            const downVotes = comment.data.downs;
-            const upVotes = comment.data.ups;
+            depth++;
             let subComments = [];
             if (comment.data.replies){
                 subComments = getSubComments(comment);
             }
-            const commentAsClass = new Comment(name, body, postedOn, downVotes, upVotes, subComments);
             const commentAsObject = {
-                name: commentAsClass.name,
-                body: commentAsClass.body,
-                postedOn: commentAsClass.postedOn,
-                downVotes: commentAsClass.downVotes,
-                upVotes: commentAsClass.upVotes,
-                subComments: commentAsClass.subComments
+                name: comment.data.author,
+                body: comment.data.body,
+                postedOn: comment.data.created_utc,
+                downVotes: comment.data.downs,
+                upVotes: comment.data.ups,
+                subComments: subComments,
+                commentDepth: depth
             }
-
+            depth = 0;
             return commentAsObject;
+
         });
         return trimmedComment;
     }
@@ -40,25 +38,18 @@ export const loadComments = createAsyncThunk('comments/loadComments', async (top
     const filteredComments = comments?.filter((x) => x.kind === "t1");
 
     const trimmedComment = filteredComments.map((comment) => {   
-        const name = comment.data.author;
-        const body = comment.data.body;
-        const postedOn = comment.data.created_utc;
-        const downVotes = comment.data.downs;
-        const upVotes = comment.data.ups;
         let subComments = [];
         if (comment.data.replies){
             subComments = getSubComments(comment);
         }
         
-        const commentAsClass = new Comment(name, body, postedOn, downVotes, upVotes, subComments);
-
         const commentAsObject = {
-            name: commentAsClass.name,
-            body: commentAsClass.body,
-            postedOn: commentAsClass.postedOn,
-            downVotes: commentAsClass.downVotes,
-            upVotes: commentAsClass.upVotes,
-            subComments: commentAsClass.subComments
+            name: comment.data.author,
+            body: comment.data.body,
+            postedOn: comment.data.created_utc,
+            downVotes: comment.data.downs,
+            upVotes: comment.data.ups,
+            subComments: subComments
         }
         return commentAsObject;
 

@@ -36,10 +36,9 @@ const Sidebar = () => {
             <h3 id="filter-title">Filter By Cuisine</h3>
             <ul className="subreddit-list">
                 {Object.values(foodTypes).map((foodType, index) => (
-                    <Link to={`/${foodType}`}>
+                    <Link key={index}  to={`/${foodType}`}>
                     <li
                         className={`cuisine${activeItem === index ? " active" : "" }${activeItem !== undefined && activeItem !== index ? " inactive" : ""}`}
-                        key={index} 
                         onClick={() => handleClick(foodType, index)}
                     >
                         {foodType}

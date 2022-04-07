@@ -21,11 +21,11 @@
     border-radius: 5px 5px 0 0;
 }
 
-ul {
+ul.subreddit-list {
     padding:0;
 }
 
-li {
+li.cuisine {
     background:rgb(190, 209, 194);
     color:black;
     text-align:center;
@@ -40,7 +40,7 @@ li {
     font-size:15px;
 }
 
-li:hover {
+li.cuisine:hover {
     background:rgb(147, 180, 154);
 }
 
