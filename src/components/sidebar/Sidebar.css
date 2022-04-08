@@ -44,16 +44,16 @@ li.cuisine:hover {
     background:rgb(147, 180, 154);
 }
 
-.active {
+li.cuisine.active {
     color:white;
     background: rgb(25, 49, 29);
 }
 
-.active:hover {
+li.cuisine.active:hover {
     background: rgb(34, 93, 83); 
 }
 
-.active:after {
+li.cuisine.active:after {
     content: "X";
     font-size:6px;
     padding:2px 4px;
@@ -64,10 +64,10 @@ li.cuisine:hover {
     top:-4px;
 }
 
-.inactive {
+li.cuisine.inactive {
     display:none;
 }
 
-.active.inactive {
+li.cuisine.active.inactive {
     display:block;
 }

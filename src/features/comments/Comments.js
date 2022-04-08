@@ -11,38 +11,48 @@ const Comments = () => {
     let { id } = useParams();
     const reddits = useSelector(selectReddits);
     const comments = useSelector(selectComments);
+    const [replyToClose, setReplyToClose] = useState([]);
     const getReddit = reddits.filter(reddit => reddit.id === id);
     const singleReddit = getReddit[0];
     const commentsLink = singleReddit.singleLink;
-
+    
     useEffect(() => {
         dispatch(loadComments(`${commentsLink}.json`));
     }, [dispatch]);
 
-    function loadSubComments(item, depth) {
-        let commentDepth = depth;
-        commentDepth ++;
+    function hideComments(id) {
+        if (replyToClose.includes(id)) {
+            const updateReplies = replyToClose.filter(reply => reply !== id);
+            setReplyToClose(updateReplies);
+        } else {
+            setReplyToClose(prev => [...prev, id]);
+        }
+    }
+    
+
+    function loadSubComments(item) {
         if(item.subComments) {
             const subComment = Object.values(item.subComments).map((comment, index) => (
-                <ul className="comment-group sub-comments" key={index}>
-                    <li>
-                    <article className="comments sub-comment" >   
-                        <div className="comment-header">
-                            <p className="float-left">{comment.name}</p>
-                            <p className="float-left">{comment.postedOn}</p>
-                        </div>
-                        <p>{comment.body}</p>
-                        <div className="comment-footer">
-                            <p className="float-left">{comment.upVotes}</p>
-                            <p className="float-left">{comment.downVotes}</p>
-                        </div>
-                    </article>
-                    </li>
-                    {comment.subComments.length > 0 && (
-                    <li>{loadSubComments(comment, commentDepth)}</li>
-                    )}
-                </ul>
-            ))
+                
+                    <ul className="comment-group sub-comments" key={comment.postedOn}>
+                        <li className={ replyToClose.includes(comment.postedOn) ? "expand-reply-icon" : "hide-reply-icon" } onClick={() => hideComments(comment.postedOn)} >
+                            <article className="comments sub-comment" >   
+                                <div className="comment-header">
+                                    <p className="float-left">{comment.name}</p>
+                                    <p className="float-left">{comment.postedOn}</p>
+                                </div>
+                                <p>{comment.body}</p>
+                                <div className="comment-footer">
+                                    <p className="float-left">{comment.upVotes}</p>
+                                    <p className="float-left">{comment.downVotes}</p>
+                                </div>
+                            </article>
+                        </li>
+                        {comment.subComments.length > 0 && (
+                            <li className={replyToClose.includes(comment.postedOn) ? "hide-replies" : null }>{loadSubComments(comment)}</li>
+                        )}
+                    </ul>
+            ));
             return subComment;
         } else {
             return;
@@ -55,8 +65,8 @@ const Comments = () => {
             <div className="comments-list">
             {comments &&
             Object.values(comments).map((comment, index) => (
-                <ul className="comment-group" key={index}>
-                    <li>
+                <ul className="comment-group" id={`reply-${comment.postedOn}`} key={comment.postedOn}>
+                    <li className={ replyToClose.includes(comment.postedOn) ? "expand-reply-icon" : "hide-reply-icon" } onClick={() => hideComments(comment.postedOn)}>
                         <article className="comments" >
                             <div className="comment-header">
                                 <p className="float-left">{comment.name}</p>
@@ -70,7 +80,7 @@ const Comments = () => {
                         </article>
                     </li>
                     {comment.subComments.length > 0 && (
-                    <li>{loadSubComments(comment, 0)}</li>
+                    <li className={ replyToClose.includes(comment.postedOn) ? "hide-replies" : null }>{loadSubComments(comment)}</li>
                     )}
                 </ul>
                 ))}
