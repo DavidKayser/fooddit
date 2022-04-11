@@ -7,7 +7,6 @@ import Sidebar from '../../components/sidebar/Sidebar';
 const HomePage = () => {
     return (
         <div id="home-page" className="page">
-            <h2>Welcome to fooddit!</h2>
             <Reddits />
             <Sidebar />
             <Outlet />

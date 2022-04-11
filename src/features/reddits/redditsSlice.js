@@ -5,9 +5,16 @@ import redditApi from '../../api/reddit-api';
 //Run API call and trim function
 export const loadReddits = createAsyncThunk('reddits/loadReddits', async (topic) => {
     const response = await redditApi(topic);
+    let loadNext = "";
+    if (response.data.after !== null) {
+        loadNext = response.data.after;
+    }
     const posts =  response.data.children;
-    const trimmedReddit = posts.map((reddit) => {
+    //filter posts without images
+    const filteredPosts = posts.filter(post => post.data.post_hint === "image");
+    const trimmedReddit = filteredPosts.map((reddit) => {
         const postData = {
+            loadNext: loadNext,
             id: reddit.data.id,
             subreddit: reddit.data.subreddit_name_prefixed,
             title: reddit.data.title,
@@ -28,8 +35,10 @@ const redditsSlice = createSlice({
     name: 'reddits',
     initialState: {
         reddits: [],
+        pageNumber: 0,
         isLoadingReddits: false,
-        failedToLoadReddits: false
+        failedToLoadReddits: false,
+        allLoaded: false
     },
     reducers: {},
     extraReducers: builder => {
@@ -38,17 +47,15 @@ const redditsSlice = createSlice({
             .addCase(loadReddits.pending, (state) => {
                 state.isLoadingReddits = true;
                 state.failedToLoadReddits = false;
-                state.reddits = [];
             })
             .addCase(loadReddits.fulfilled, (state, action) => {
                 state.isLoadingReddits = false;
                 state.failedToLoadReddits = false;
-                state.reddits = action.payload;
+                state.reddits = state.reddits.concat(action.payload);
             })
             .addCase(loadReddits.rejected, (state) => {
                 state.isLoadingReddits = false;
                 state.failedToLoadReddits = true;
-                state.reddits = [];
             })
     }
 });

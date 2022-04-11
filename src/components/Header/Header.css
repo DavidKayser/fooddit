@@ -1,11 +1,55 @@
 nav {
-    height: 55px;
-    padding: 0 15px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    background: white;
+    padding: 5px 15px;
+    border-bottom:1px solid #00866c;
+    margin-bottom:30px;
+    /* background: rgb(13,46,101); */
+    /* background: linear-gradient(90deg, rgba(13,46,101,1) 0%, rgba(68,153,198,1) 51%, rgba(13,46,101,1) 100%); */
+    background:white;
+    box-shadow: 0 0 1.3rem #00ffcc;
+}
+
+#page-heading {
+    text-align:center;
+    margin:20px auto;
+    color: rgb(114, 114, 114);
+}
+
+.heading-border {
+    display:inline-block;
+    border: 0.2rem solid rgb(183, 183, 183);
+    padding:10px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    outline:1px solid rgb(114, 114, 114);
+    outline-offset:-2px;
+    text-shadow:
+        -1px -1px 0 rgb(183, 183, 183),  
+        1px -1px 0 rgb(183, 183, 183),
+        -1px 1px 0 rgb(183, 183, 183),
+        1px 1px 0 rgb(183, 183, 183);
+}
+
+.heading-border.title-on {
+    color:white;
+    border: 0.2rem solid white;
+    outline:1px solid rgb(183, 183, 183);
+    text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #00ffcc,
+        0 0 80px #00ffcc,
+        0 0 90px #00ffcc,
+        0 0 100px #00ffcc,
+        0 0 150px #00ffcc;
+
+    box-shadow: 
+        0 0 .2rem #fff,
+        0 0 .2rem #fff,
+        0 0 2rem #00ffcc,
+        0 0 0.8rem #00ffcc,
+        0 0 2.8rem #00ffcc,
+        inset 0 0 1.3rem #00ffcc;
 }
 
 .logo {
@@ -14,10 +58,11 @@ nav {
 }
 
 .search-form {
-    width: 40%;
+    width: 30%;
     min-width: 200px;
     position: relative;
-    margin-right: 45px;
+    left: -45px;
+    float:right;
 }
 
 .search {
@@ -25,6 +70,6 @@ nav {
    padding: 10px 5px 10px 40px;
    border: 1px solid grey;
    border-radius: 20px;
-   background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E") no-repeat 13px center;
-
+   background: white url('../../media/magnifying-glass.png') no-repeat 10px center;
+   background-size:20px;
 }

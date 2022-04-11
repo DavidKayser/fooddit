@@ -3,7 +3,7 @@
 }
 
 .comment-header p, .comment-footer p {
-    margin:0 0 0 20px;
+    margin:0 0 0 10px;
     font-size:12px;
     color:rgb(75, 75, 75);
 }
@@ -19,6 +19,7 @@
 .comments{
     padding:10px;
     border-radius:10px;
+    word-break: break-word;
 }
 
 .comments-list {
@@ -75,3 +76,40 @@
     display:none;
 }
 
+.reply-posted:hover .reply-time {
+    display:none;
+}
+
+.reply-posted:hover .full-date {
+    display:inline-block;
+}
+
+.full-date {
+    display:none;
+}
+
+.comment-footer .reply-reaction {
+    position:relative;
+    padding-left:25px;
+    line-height:20px;
+    font-weight:bold;
+}
+
+.comment-footer .down-votes {
+    margin-left:15px;
+}
+
+.comment-footer .reply-reaction:before {
+    content: "";
+    background: url('../../media/react.png') no-repeat;
+    background-size:20px;
+    width:20px;
+    height:20px;
+    display:inline-block;
+    position: absolute;
+    left:0;
+}
+
+.comment-footer .up-votes:before {
+    transform: rotate(180deg);
+}

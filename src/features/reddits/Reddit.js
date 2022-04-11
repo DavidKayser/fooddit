@@ -35,14 +35,13 @@ const Reddit = () => {
                     <div className="reddit-header">
                         <p className="float-left community">{singleReddit.subreddit}</p>
                         <p className="float-left">Posted by {singleReddit.author}</p>
+                        <p onClick={(event) => onDismiss(event)} className="float-right close-modal">x</p>
                     </div>
                     <h3>{singleReddit.title}</h3>
-                    {singleReddit.mediaType === "image" && (
+                    <div className="reddit-body">
+                        <img className="reddit-portrait-image" src={singleReddit.media} alt="media" />
                         <img className="reddit-image" src={singleReddit.media} alt="media" />
-                    )}
-                    {singleReddit.mediaType === "link" && (
-                        <a href={singleReddit.media} target="_blank" rel="noreferrer">LINK</a>
-                    )}
+                    </div>
                     <div className="reddit-footer">
                         <p className="float-left">{singleReddit.upvotes} upvotes</p>
                         <p className="float-left">{singleReddit.numberOfComments} Comments</p>

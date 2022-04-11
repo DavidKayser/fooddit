@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { selectReddits } from "../../features/reddits/redditsSlice";
 import { selectComments, loadComments } from "../../features/comments/commentsSlice";
 import "./Comments.css";
+import { timeConverter } from "../../utils/timeConverter";
 
 const Comments = () => {
     const dispatch = useDispatch();
@@ -39,12 +39,17 @@ const Comments = () => {
                             <article className="comments sub-comment" >   
                                 <div className="comment-header">
                                     <p className="float-left">{comment.name}</p>
-                                    <p className="float-left">{comment.postedOn}</p>
+                                    <p className="reply-posted float-left">
+                                        <span className="reply-time">{timeConverter(comment.postedOn)[0]}</span>
+                                        {timeConverter(comment.postedOn)[1] && (
+                                            <span className="full-date">{timeConverter(comment.postedOn)[1]}</span>
+                                        )}
+                                    </p>
                                 </div>
                                 <p>{comment.body}</p>
                                 <div className="comment-footer">
-                                    <p className="float-left">{comment.upVotes}</p>
-                                    <p className="float-left">{comment.downVotes}</p>
+                                    <p className="up-votes reply-reaction float-left">{comment.upVotes}</p>
+                                    <p className="down-votes reply-reaction float-left">{comment.downVotes}</p>
                                 </div>
                             </article>
                         </li>
@@ -70,12 +75,18 @@ const Comments = () => {
                         <article className="comments" >
                             <div className="comment-header">
                                 <p className="float-left">{comment.name}</p>
-                                <p className="float-left">{comment.postedOn}</p>
+                                <p className="float-left">&middot;</p>
+                                <p className="reply-posted float-left">
+                                    <span className="reply-time">{timeConverter(comment.postedOn)[0]}</span>
+                                    {timeConverter(comment.postedOn)[1] && (
+                                        <span className="full-date">{timeConverter(comment.postedOn)[1]}</span>
+                                    )}
+                                </p>
                             </div>
                             <p>{comment.body}</p>
                             <div className="comment-footer">
-                                <p className="float-left">{comment.upVotes}</p>
-                                <p className="float-left">{comment.downVotes}</p>
+                                <p className="up-votes reply-reaction float-left">{comment.upVotes}</p>
+                                <p className="down-votes reply-reaction float-left">{comment.downVotes}</p>
                             </div>
                         </article>
                     </li>
