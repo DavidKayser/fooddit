@@ -21,11 +21,14 @@ function App() {
       <Routes location={state?.backgroundLocation || location}>
           <Route path="/:category" element={<HomePage />} />
       </Routes>
-      {state?.backgroundLocation && (
-        <Routes>
-          <Route path="/:id/:title" element={<Reddit />} />
-        </Routes>
-      )}
+
+      <Routes>
+        <Route path="/:id/:title" element={<Reddit />} />
+        <Route path=":after/:id/:title" element={<Reddit />} />
+      </Routes>
+
+
+
       </div>
   );
 }

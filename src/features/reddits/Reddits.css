@@ -1,4 +1,4 @@
-.reddits-previews {
+#reddits-previews {
     position:relative;
     width: 100%;
     overflow: hidden;
@@ -9,6 +9,8 @@
     background:white;
     padding:15px;
     box-sizing:border-box;
+    border: 1px solid #cfcfbb;
+    box-shadow: 0 0 9px 1px #807e72;
 }
 
 .author-image{

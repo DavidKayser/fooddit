@@ -2,21 +2,27 @@ import React from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { selectReddits, selectIsLoading, loadReddits } from "./redditsSlice";
+import { selectReddits, selectIsLoading, loadReddits, reloadReddits } from "./redditsSlice";
 import Comments from "../comments/Comments";
 import './Reddit.css';
 
 const Reddit = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    let { id } = useParams();
+    let { id, after } = useParams();
     const reddits = useSelector(selectReddits);
     const getReddit = reddits.filter(reddit => reddit.id === id);
     const singleReddit = getReddit[0];
+    const [reload, setReload] = useState();
+
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
-    });
+
+        if(after) {
+            dispatch(loadReddits(`r/food.json?after=${after}`));
+        }
+    }, []);
 
     function onDismiss(event) {
         event.preventDefault();

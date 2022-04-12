@@ -3,6 +3,7 @@
     margin:0;
     background:white;
     padding:10px;
+    border-radius:10px;
 }
 
 
@@ -29,6 +30,7 @@
     background:rgb(4, 12, 40);
     position: relative;
     overflow:hidden;
+    border-radius:10px;
 }
 
 .reddit-image {
@@ -44,7 +46,7 @@
     position:absolute;
     z-index:0;
     top:-50%;
-    filter:blur(8px) brightness(40%);
+    filter:blur(8px) brightness(50%);
 }
 
 @media only screen and (min-width: 751px) {

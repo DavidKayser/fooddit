@@ -35,12 +35,16 @@ const redditsSlice = createSlice({
     name: 'reddits',
     initialState: {
         reddits: [],
-        pageNumber: 0,
+        nextToLoad: "",
         isLoadingReddits: false,
         failedToLoadReddits: false,
         allLoaded: false
     },
-    reducers: {},
+    reducers: {
+        reloadReddits: (state, action) => {
+            // state.nextToLoad = action.payload;
+        }
+    },
     extraReducers: builder => {
         builder
             //loading reddits
@@ -52,6 +56,7 @@ const redditsSlice = createSlice({
                 state.isLoadingReddits = false;
                 state.failedToLoadReddits = false;
                 state.reddits = state.reddits.concat(action.payload);
+                state.nextToLoad = action.payload[0].loadNext;
             })
             .addCase(loadReddits.rejected, (state) => {
                 state.isLoadingReddits = false;
@@ -60,7 +65,9 @@ const redditsSlice = createSlice({
     }
 });
 
+export const { reloadReddits } = redditsSlice.actions; 
 export const selectReddits = (state) => state.reddits.reddits;
 export const selectIsLoading = (state) => state.reddits.isLoadingReddits;
+export const selectNextToLoad = (state) => state.reddits.nextToLoad;
 
 export default redditsSlice.reducer;

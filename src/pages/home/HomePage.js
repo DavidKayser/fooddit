@@ -9,7 +9,6 @@ const HomePage = () => {
         <div id="home-page" className="page">
             <Reddits />
             <Sidebar />
-            <Outlet />
         </div>
     );
 }
