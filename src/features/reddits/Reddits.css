@@ -5,12 +5,24 @@
     margin-bottom: 20px;
 }
 
+#reddits-previews > div > div > div {
+    align-self: start;
+}
+
 .reddits-article {
     background:white;
     padding:15px;
     box-sizing:border-box;
     border: 1px solid #cfcfbb;
     box-shadow: 0 0 9px 1px #807e72;
+    max-width:100%;
+    margin:10px;
+}
+
+.masonry-column {
+    width:33%;
+    float:left;
+    box-sizing: border-box;
 }
 
 .author-image{
@@ -72,7 +84,6 @@
 
 @media only screen and (min-width: 751px) {
     .reddits-article {
-        margin:10px;
         border-radius:5px;
     }
 }

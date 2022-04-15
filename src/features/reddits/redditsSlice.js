@@ -37,8 +37,7 @@ const redditsSlice = createSlice({
         reddits: [],
         nextToLoad: "",
         isLoadingReddits: false,
-        failedToLoadReddits: false,
-        allLoaded: false
+        failedToLoadReddits: false
     },
     reducers: {
         reloadReddits: (state, action) => {

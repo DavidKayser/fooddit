@@ -1,10 +1,9 @@
 import React from 'react';
-import Masonry, {ResponsiveMasonry} from "react-responsive-masonry";
 import './Loading.css';
 
 export const Loading = () => {
-    return(
-        <article className="reddit-loading-article">
+    const loadingArticle = (
+        <article className="reddit-loading-article masonry-item">
             <div className="reddit-loading-header"><p>LOADING...</p></div>
             <div className="reddit-loading-image">
                 <div className="reddit-loading-icon"></div>
@@ -13,5 +12,11 @@ export const Loading = () => {
             </div>
             <div className="reddit-loading-footer"><p>LOADING...</p></div>
         </article>
+    );
+    return(
+        <>
+            {loadingArticle}
+            {loadingArticle}
+        </>
     );
 }
