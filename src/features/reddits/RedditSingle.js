@@ -1,64 +1,74 @@
 import React from 'react';
-import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectReddits, loadReddits, selectNextToLoad } from "./redditsSlice";
-import "./Reddits.css";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { selectReddits, selectSingleReddit, loadReddits, resetSingleReddit } from "./redditsSlice";
+import Comments from "../comments/Comments";
+import "./RedditSingle.css";
 
 const RedditSingle = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    let { id, title } = useParams();
     const reddits = useSelector(selectReddits);
-    const nextToLoad = useSelector(selectNextToLoad);
-    const location = useLocation();
-    let { category } = useParams();
-    const [loadMore, setLoadMore] = useState([""]);
+    const single = useSelector(selectSingleReddit);
+    let singleReddit;
+    if (reddits.length > 0) {
+        const getReddit = reddits.filter(reddit => reddit.id === id);
+        singleReddit = getReddit[0];
+    } else {
+        singleReddit = single;
+    }
+    
 
     useEffect(() => {
-        if(category) {
-            dispatch(loadReddits(`r/food/search.json?q=${category}&restrict_sr=1&sr_nsfw=`));
-
-        } else {
-            dispatch(loadReddits(`r/food.json?after=${nextToLoad}`));
-        }    
-
-    });
-    //set path for link
-    function articleRoute(title, id, loadNext) {
-        const cleanTitle = title.replace(/[^a-zA-Z0-9-_]/g, '');
-        const nextIndex = loadMore.indexOf(loadNext);
-        if (nextIndex > 1) {
-            const getReddit = nextIndex - 1;
-            return `/${loadMore[getReddit]}/${id}/${cleanTitle}`
+        document.body.style.overflow = 'hidden';
+        if (reddits.length <= 0) {
+            dispatch(loadReddits({link: `/r/food/comments/${id}/${title}.json`, isSingle: true}));
         }
-        return `/${id}/${cleanTitle}`
+    }, []);
+
+    function onDismiss(event) {
+        event.preventDefault();
+        
+        if(event.target === event.currentTarget) {
+            document.body.style.overflow = 'unset';
+            if (reddits.length <= 0) {
+                navigate("/");
+                return;
+            }
+            navigate(-1);
+            dispatch(resetSingleReddit());
+        }
     }
-
+    
     return (
-        <>
-        {reddits.map((reddit, index) => (
-            <article className="reddits-article" key={index}>
-                <div className="reddit-header">
-                    <p className="float-left community">{reddit.subreddit}</p>
-                    <p className="float-left">Posted by {reddit.author}</p>
-                </div>
-                <Link data-testid="single-link" to={articleRoute(reddit.title, reddit.id, reddit.loadNext)} state={{ backgroundLocation: location }}> 
-                    <div className="reddits-body">  
-                        <h3 className="reddits-title">{reddit.title}</h3>
-                        <img className="reddits-image" src={reddit.media} alt="media" />
+        <div>
+            <div onClick={(event) => onDismiss(event)} className="overlay" data-testid="overlay">
+            <section className="modal">
+            {singleReddit && (
+                <article className="reddit-article">
+                    <div className="reddit-header">
+                        <p className="float-left community">{singleReddit.subreddit}</p>
+                        <p className="float-left">Posted by {singleReddit.author}</p>
+                        <p onClick={(event) => onDismiss(event)} className="float-right close-modal">x</p>
                     </div>
-                </Link>
-                {reddit.mediaType === "link" && (
-                    <a href={reddit.media} target="_blank" rel="noreferrer">LINK</a>
-                )}
-                <div className="reddit-footer">
-                    <p className="float-left">{reddit.upvotes} upvotes</p>
-                    <p className="reddits-comments-icon float-left">{reddit.numberOfComments} Comments</p>
-                    <p className="float-left">{reddit.postedOn}</p>
-                </div>
-            </article>
-        ))}
-        </>
-
+                    <h3>{singleReddit.title}</h3>
+                    <div className="reddit-body">
+                        <img className="reddit-portrait-image" src={singleReddit.media} alt="media" />
+                        <img className="reddit-image" src={singleReddit.media} alt="media" />
+                    </div>
+                    <div className="reddit-footer">
+                        <p className="float-left">{singleReddit.upvotes} upvotes</p>
+                        <p className="float-left">{singleReddit.numberOfComments} Comments</p>
+                        <p className="float-left">{singleReddit.postedOn}</p>
+                    </div>
+                    <Comments commentsLink={singleReddit.singleLink} />
+                </article>
+            )}
+            </section>
+            </div>
+        </div>
     );
 }
 

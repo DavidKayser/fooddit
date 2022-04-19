@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import { selectReddits } from "../../features/reddits/redditsSlice";
+import { selectSingleReddit } from "../../features/reddits/redditsSlice";
 import { selectComments, loadComments } from "../../features/comments/commentsSlice";
 import "./Comments.css";
 import { timeConverter } from "../../utils/timeConverter";
 
-const Comments = () => {
+const Comments = ({commentsLink}) => {
     const dispatch = useDispatch();
-    let { id } = useParams();
-    const reddits = useSelector(selectReddits);
+    const singleReddit = useSelector(selectSingleReddit);
     const comments = useSelector(selectComments);
     const [replyToClose, setReplyToClose] = useState([]);
-    const getReddit = reddits.filter(reddit => reddit.id === id);
-    const singleReddit = getReddit[0];
-    const commentsLink = singleReddit.singleLink;
     
     useEffect(() => {
-        dispatch(loadComments(`${commentsLink}.json`));
+        if(singleReddit) {
+            dispatch(loadComments(`${commentsLink}.json`));
+        }
     }, [dispatch]);
 
     function hideComments(id) {
@@ -29,7 +26,6 @@ const Comments = () => {
         }
     }
     
-
     function loadSubComments(item) {
         if(item.subComments) {
             const subComment = Object.values(item.subComments).map((comment, index) => (

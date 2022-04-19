@@ -3,13 +3,19 @@ import redditApi from '../../api/reddit-api';
 
 
 //Run API call and trim function
-export const loadReddits = createAsyncThunk('reddits/loadReddits', async (topic) => {
-    const response = await redditApi(topic);
+export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadData) => {
+    const {link, isSingle } = loadData;
+    const response = await redditApi(link);
     let loadNext = "";
-    if (response.data.after !== null) {
-        loadNext = response.data.after;
+    let posts;
+    if (!isSingle) {
+        if (response.data.after !== null) {
+            loadNext = response.data.after;
+        }
+        posts =  response.data.children;
+    } else {
+        posts  = response[0].data.children;
     }
-    const posts =  response.data.children;
     //filter posts without images
     const filteredPosts = posts.filter(post => post.data.post_hint === "image");
     const trimmedReddit = filteredPosts.map((reddit) => {
@@ -20,6 +26,7 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (topic)
             title: reddit.data.title,
             mediaType: reddit.data.post_hint,
             media: reddit.data.url_overridden_by_dest,
+            mediaDimensions: {width: reddit.data.preview.images[0].source.width, height: reddit.data.preview.images[0].source.height},
             author: reddit.data.author,
             upvotes: reddit.data.ups,
             postedOn: reddit.data.created_utc,
@@ -28,20 +35,22 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (topic)
         }
         return postData;
     });
-    return trimmedReddit;
+    return [isSingle, trimmedReddit];
 });
 
 const redditsSlice = createSlice({
     name: 'reddits',
     initialState: {
         reddits: [],
-        nextToLoad: "",
+        loadMore: [""],
+        singleReddit: null,
+        backLink: null,
         isLoadingReddits: false,
         failedToLoadReddits: false
     },
     reducers: {
-        reloadReddits: (state, action) => {
-            // state.nextToLoad = action.payload;
+        resetSingleReddit: (state) => {
+            state.singleReddit = null;
         }
     },
     extraReducers: builder => {
@@ -54,8 +63,14 @@ const redditsSlice = createSlice({
             .addCase(loadReddits.fulfilled, (state, action) => {
                 state.isLoadingReddits = false;
                 state.failedToLoadReddits = false;
-                state.reddits = state.reddits.concat(action.payload);
-                state.nextToLoad = action.payload[0].loadNext;
+
+                if (action.payload[0] === true) {
+                    state.singleReddit = action.payload[1][0];
+                } else {
+                    state.reddits = state.reddits.concat(action.payload[1]);
+                    state.loadMore = state.loadMore.concat(action.payload[1][0].loadNext);
+                }
+
             })
             .addCase(loadReddits.rejected, (state) => {
                 state.isLoadingReddits = false;
@@ -64,9 +79,10 @@ const redditsSlice = createSlice({
     }
 });
 
-export const { reloadReddits } = redditsSlice.actions; 
+export const { navigateBack, resetSingleReddit } = redditsSlice.actions; 
 export const selectReddits = (state) => state.reddits.reddits;
+export const selectSingleReddit = (state) => state.reddits.singleReddit;
 export const selectIsLoading = (state) => state.reddits.isLoadingReddits;
-export const selectNextToLoad = (state) => state.reddits.nextToLoad;
+export const selectLoadMore = (state) => state.reddits.loadMore;
 
 export default redditsSlice.reducer;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectReddits, selectIsLoading, selectNextToLoad, loadReddits } from "./redditsSlice";
+import { selectReddits, selectIsLoading, selectLoadMore, loadReddits } from "./redditsSlice";
 import "./Reddits.css";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "../../components/loading/Loading";
@@ -12,22 +12,26 @@ const Reddits = () => {
     const dispatch = useDispatch();
     const reddits = useSelector(selectReddits);
     const isLoading = useSelector(selectIsLoading);
-    const nextToLoad = useSelector(selectNextToLoad);
+    const loadMore = useSelector(selectLoadMore);
     const location = useLocation();
-    const [loadMore, setLoadMore] = useState([""]);
-    let { category } = useParams();
+    const [nextToLoad, setNextToLoad] = useState();
+    let { category } = useParams(null);
     let base;
-
     let tallestRefs = useRef([]);
 
     useEffect(() => {
         if(category) {
-            dispatch(loadReddits(`r/food/search.json?q=${category}&restrict_sr=1&sr_nsfw=`));
-
+            dispatch(loadReddits({link: `r/food/search.json?q=${category}&restrict_sr=1&sr_nsfw=`, isSingle: false}));
         } else {
-            dispatch(loadReddits(`r/food.json?after=${nextToLoad}`));
+            if (nextToLoad) {
+                console.log("two");
+                dispatch(loadReddits({link: `r/food.json?after=${nextToLoad}`, isSingle: false}));
+            } else {
+                console.log("one");
+                dispatch(loadReddits({link: `r/food.json`, isSingle: false}));
+            }
         }
-    }, [loadMore]);
+    }, [nextToLoad]);
 
     useEffect(() => {
         function watchScroll() {
@@ -42,16 +46,15 @@ const Reddits = () => {
     //dispatch reddits
     function loadMoreReddits() {
         if (reddits[0] && !isLoading) {
-            setLoadMore(loadMore => [...loadMore, nextToLoad]);
+            setNextToLoad(loadMore[loadMore.length - 1]);
         }
     }
-    
 
     // load more reddits when scrolling to bottom
     function loadOnScroll() {
         let maxHeight = 0;
         for (let i = 0; i < reddits.length; i++) {
-            const { scrollTop, scrollHeight, clientHeight } = tallestRefs.current[i];
+            const { clientHeight } = tallestRefs.current[i];
             if (clientHeight > maxHeight) {
                  maxHeight = clientHeight;
             }
@@ -70,14 +73,17 @@ const Reddits = () => {
     }
 
     //set path for link
-    function articleRoute(title, id, loadNext) {
-        const cleanTitle = title.replace(/[^a-zA-Z0-9-_]/g, '');
-        const nextIndex = loadMore.indexOf(loadNext);
-        if (nextIndex > 1) {
-            const getReddit = nextIndex - 1;
-            return `/${loadMore[getReddit]}/${id}/${cleanTitle}`;
+    function articleRoute(singleLink, id) {
+        const seperateLink = singleLink.split("/");
+        const title = seperateLink[seperateLink.length -2];
+        return `/${id}/${title}` 
+    }
+
+    function placeHolderDimensions(width, height) {
+        const ratio = height / width * 100;
+        return {
+            paddingTop: ratio + "%"
         }
-        return `/${id}/${cleanTitle}`
     }
 
     return (
@@ -93,10 +99,12 @@ const Reddits = () => {
                                 <p className="float-left community">{reddit.subreddit}</p>
                                 <p className="float-left">Posted by {reddit.author}</p>
                             </div>
-                            <Link data-testid="single-link" to={articleRoute(reddit.title, reddit.id, reddit.loadNext)} state={{ backgroundLocation: location }}> 
+                            <Link data-testid="single-link" to={articleRoute(reddit.singleLink, reddit.id)} state={{ backgroundLocation: location }}> 
                                 <div className="reddits-body">  
                                     <h3 className="reddits-title">{reddit.title}</h3>
-                                    <img className="reddits-image" src={reddit.media} alt="media" />
+                                    <div className="image-wrapper" style={placeHolderDimensions(reddit.mediaDimensions.width, reddit.mediaDimensions.height)}>
+                                        <img className="reddits-image" src={reddit.media} alt="media" />
+                                    </div>
                                 </div>
                             </Link>
                             {reddit.mediaType === "link" && (

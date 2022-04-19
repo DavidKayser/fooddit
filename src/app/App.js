@@ -6,7 +6,7 @@ import {
  } from 'react-router-dom';
 import Header from '../components/header/Header';
 import HomePage from '../pages/home/HomePage';
-import Reddit from '../features/reddits/Reddit';
+import RedditSingle from '../features/reddits/RedditSingle';
 
 
 function App() {
@@ -23,8 +23,7 @@ function App() {
       </Routes>
 
       <Routes>
-        <Route path="/:id/:title" element={<Reddit />} />
-        <Route path=":after/:id/:title" element={<Reddit />} />
+        <Route path="/:id/:title" element={<RedditSingle />} />
       </Routes>
 
 
