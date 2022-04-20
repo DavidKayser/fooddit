@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectReddits, selectIsLoading, selectLoadMore, loadReddits, resetReddits } from "./redditsSlice";
+import { selectReddits, selectIsLoading, selectLoadMore, selectRedditFilter, loadReddits, resetReddits } from "./redditsSlice";
 import "./Reddits.css";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "../../components/loading/Loading";
@@ -10,18 +10,26 @@ import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
 
 const Reddits = () => {
     const dispatch = useDispatch();
-    const reddits = useSelector(selectReddits);
+    const location = useLocation();
+    
+    let reddits = useSelector(selectReddits);
     const isLoading = useSelector(selectIsLoading);
     const loadMore = useSelector(selectLoadMore);
-    const location = useLocation();
+    const redditFilter = useSelector(selectRedditFilter);
+    
     const [nextToLoad, setNextToLoad] = useState();
-    let { category, search } = useParams(null);
+    
+    let { filter, search } = useParams(null);
+    
+    const filteredReddits = reddits.filter(reddit => reddit.flair === filter);
     let base;
     let tallestRefs = useRef([]);
+    
+    if (redditFilter) {
+        reddits = filteredReddits;
+    }
     useEffect(() => {
-        if(category) {
-            dispatch(loadReddits({link: `/r/food/search.json?q=${category}&restrict_sr=1&sr_nsfw=`, queryType: "full" }));
-        } else if (search) {
+        if (search) {
             dispatch(resetReddits());
             dispatch(loadReddits({link: `/r/food/search.json?q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
         } else {
@@ -33,7 +41,7 @@ const Reddits = () => {
                 dispatch(loadReddits({link: `/r/food.json`, queryType: "full"}));
             }
         }
-    }, [nextToLoad, search, category, dispatch]);
+    }, [nextToLoad, search, filter, dispatch]);
 
     useEffect(() => {
         function watchScroll() {
@@ -101,6 +109,8 @@ const Reddits = () => {
                             <div className="reddit-header">
                                 <p className="float-left community">{reddit.subreddit}</p>
                                 <p className="float-left">Posted by {reddit.author}</p>
+                                <p className="float-left">Flair: {reddit.flair}</p>
+
                             </div>
                             <Link data-testid="single-link" to={articleRoute(reddit.singleLink, reddit.id)} state={{ backgroundLocation: location }}> 
                                 <div className="reddits-body">  

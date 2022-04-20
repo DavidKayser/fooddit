@@ -26,15 +26,16 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
         default:
             console.log("could not get queryType");
     }
-    let loadNext = "";
+    let loadNext = response.data.after;
+
     let posts;
 
     if (queryType === "single") {
         posts = response[0].data.children;
     } else {
-        if (response.data.after !== null) {
-            loadNext = response.data.after;
-        }
+        // if (response.data.after !== null) {
+        //     loadNext = response.data.after;
+        // }
         posts = response.data.children;
     } 
     //filter posts without images
@@ -52,7 +53,8 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
             upvotes: reddit.data.ups,
             postedOn: reddit.data.created_utc,
             numberOfComments: reddit.data.num_comments,
-            singleLink: reddit.data.permalink
+            singleLink: reddit.data.permalink,
+            flair: reddit.data.link_flair_text
         }
         return postData;
     });
@@ -65,6 +67,7 @@ const redditsSlice = createSlice({
         reddits: [],
         loadMore: [""],
         singleReddit: null,
+        filter: null,
         isLoadingReddits: false,
         failedToLoadReddits: false
     },
@@ -74,6 +77,9 @@ const redditsSlice = createSlice({
         },
         resetReddits: (state) => {
             state.reddits = [];
+        },
+        filterReddits: (state, action) => {
+            state.filter = action.payload;
         }
     },
     extraReducers: builder => {
@@ -103,9 +109,10 @@ const redditsSlice = createSlice({
     }
 });
 
-export const { resetSingleReddit, resetReddits } = redditsSlice.actions; 
+export const { resetSingleReddit, resetReddits, filterReddits } = redditsSlice.actions; 
 export const selectReddits = (state) => state.reddits.reddits;
 export const selectSingleReddit = (state) => state.reddits.singleReddit;
+export const selectRedditFilter = (state) => state.reddits.filter;
 export const selectIsLoading = (state) => state.reddits.isLoadingReddits;
 export const selectLoadMore = (state) => state.reddits.loadMore;
 

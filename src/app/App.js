@@ -19,7 +19,7 @@ function App() {
           <Route index element={<HomePage />} />
       </Routes>
       <Routes location={state?.backgroundLocation || location}>
-          <Route path="/cuisine/:category" element={<HomePage />} />
+          <Route path="/filter/:filter" element={<HomePage />} />
       </Routes>
       <Routes location={state?.backgroundLocation || location}>
           <Route path="/search/:search" element={<HomePage />} />
