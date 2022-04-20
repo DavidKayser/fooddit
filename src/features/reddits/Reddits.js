@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectReddits, selectIsLoading, selectLoadMore, loadReddits } from "./redditsSlice";
+import { selectReddits, selectIsLoading, selectLoadMore, loadReddits, resetReddits } from "./redditsSlice";
 import "./Reddits.css";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "../../components/loading/Loading";
@@ -15,23 +15,25 @@ const Reddits = () => {
     const loadMore = useSelector(selectLoadMore);
     const location = useLocation();
     const [nextToLoad, setNextToLoad] = useState();
-    let { category } = useParams(null);
+    let { category, search } = useParams(null);
     let base;
     let tallestRefs = useRef([]);
-
     useEffect(() => {
         if(category) {
-            dispatch(loadReddits({link: `r/food/search.json?q=${category}&restrict_sr=1&sr_nsfw=`, isSingle: false}));
+            dispatch(loadReddits({link: `/r/food/search.json?q=${category}&restrict_sr=1&sr_nsfw=`, queryType: "full" }));
+        } else if (search) {
+            dispatch(resetReddits());
+            dispatch(loadReddits({link: `/r/food/search.json?q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
         } else {
             if (nextToLoad) {
                 console.log("two");
-                dispatch(loadReddits({link: `r/food.json?after=${nextToLoad}`, isSingle: false}));
+                dispatch(loadReddits({link: `/r/food.json?after=${nextToLoad}`, queryType: "full"}));
             } else {
                 console.log("one");
-                dispatch(loadReddits({link: `r/food.json`, isSingle: false}));
+                dispatch(loadReddits({link: `/r/food.json`, queryType: "full"}));
             }
         }
-    }, [nextToLoad]);
+    }, [nextToLoad, search, category, dispatch]);
 
     useEffect(() => {
         function watchScroll() {
@@ -46,7 +48,7 @@ const Reddits = () => {
     //dispatch reddits
     function loadMoreReddits() {
         if (reddits[0] && !isLoading) {
-            setNextToLoad(loadMore[loadMore.length - 1]);
+            setNextToLoad(loadMore);
         }
     }
 
@@ -76,7 +78,7 @@ const Reddits = () => {
     function articleRoute(singleLink, id) {
         const seperateLink = singleLink.split("/");
         const title = seperateLink[seperateLink.length -2];
-        return `/${id}/${title}` 
+        return `/article/${id}/${title}` 
     }
 
     function placeHolderDimensions(width, height) {
@@ -89,6 +91,7 @@ const Reddits = () => {
     return (
         <section className="main-content">
             <div id="reddits-previews">
+            {reddits && (
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{350: 1, 750: 2, 900: 3}}
                 >
@@ -122,6 +125,7 @@ const Reddits = () => {
                     {isLoading && <Loading />}
                     </Masonry>
             </ResponsiveMasonry>
+            )}
             </div>
         </section>
     );

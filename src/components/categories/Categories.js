@@ -3,9 +3,9 @@ import { loadReddits } from "../../features/reddits/redditsSlice";
 import "../../features/reddits/Reddits.css";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "./Sidebar.css"
+import "./Categories.css"
 
-const Sidebar = () => {
+const Categories = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const foodTypes = ["thai", "japanese", "chinese", "indian", "african", "american"];
@@ -50,4 +50,4 @@ const Sidebar = () => {
     );
 }
 
-export default Sidebar;
+export default Categories;

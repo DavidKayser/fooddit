@@ -19,11 +19,14 @@ function App() {
           <Route index element={<HomePage />} />
       </Routes>
       <Routes location={state?.backgroundLocation || location}>
-          <Route path="/:category" element={<HomePage />} />
+          <Route path="/cuisine/:category" element={<HomePage />} />
+      </Routes>
+      <Routes location={state?.backgroundLocation || location}>
+          <Route path="/search/:search" element={<HomePage />} />
       </Routes>
 
       <Routes>
-        <Route path="/:id/:title" element={<RedditSingle />} />
+        <Route path="article/:id/:title" element={<RedditSingle />} />
       </Routes>
 
 

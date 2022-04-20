@@ -2,13 +2,13 @@ import React from 'react';
 import { Outlet } from "react-router-dom";
 import './HomePage.css';
 import Reddits from '../../features/reddits/Reddits'; 
-import Sidebar from '../../components/sidebar/Sidebar'; 
+import Categories from '../../components/categories/Categories'; 
 
 const HomePage = () => {
     return (
         <div id="home-page" className="page">
+            <Categories />
             <Reddits />
-            <Sidebar />
         </div>
     );
 }

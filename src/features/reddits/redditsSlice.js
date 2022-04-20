@@ -4,18 +4,39 @@ import redditApi from '../../api/reddit-api';
 
 //Run API call and trim function
 export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadData) => {
-    const {link, isSingle } = loadData;
+    const {link, queryType } = loadData;
     const response = await redditApi(link);
+    
+    switch(queryType) {
+        case "full":
+            if (response.data.children.length <= 0) {
+                return [queryType, [{}]];
+            }
+            break;
+        case "single":
+            if (response[0].data.children.length <= 0) {
+                return [queryType, [{}]];
+            }
+            break;
+        case "search":
+            if (response.data.children.length <= 0) {
+                return [queryType, [{}]];
+            }
+            break;
+        default:
+            console.log("could not get queryType");
+    }
     let loadNext = "";
     let posts;
-    if (!isSingle) {
+
+    if (queryType === "single") {
+        posts = response[0].data.children;
+    } else {
         if (response.data.after !== null) {
             loadNext = response.data.after;
         }
-        posts =  response.data.children;
-    } else {
-        posts  = response[0].data.children;
-    }
+        posts = response.data.children;
+    } 
     //filter posts without images
     const filteredPosts = posts.filter(post => post.data.post_hint === "image");
     const trimmedReddit = filteredPosts.map((reddit) => {
@@ -35,7 +56,7 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
         }
         return postData;
     });
-    return [isSingle, trimmedReddit];
+    return [queryType, trimmedReddit];
 });
 
 const redditsSlice = createSlice({
@@ -44,13 +65,15 @@ const redditsSlice = createSlice({
         reddits: [],
         loadMore: [""],
         singleReddit: null,
-        backLink: null,
         isLoadingReddits: false,
         failedToLoadReddits: false
     },
     reducers: {
         resetSingleReddit: (state) => {
             state.singleReddit = null;
+        },
+        resetReddits: (state) => {
+            state.reddits = [];
         }
     },
     extraReducers: builder => {
@@ -63,14 +86,15 @@ const redditsSlice = createSlice({
             .addCase(loadReddits.fulfilled, (state, action) => {
                 state.isLoadingReddits = false;
                 state.failedToLoadReddits = false;
-
-                if (action.payload[0] === true) {
+                if (action.payload[0] === "single") {
                     state.singleReddit = action.payload[1][0];
-                } else {
+                } else if (action.payload[0] === "search"){
+                    state.reddits = action.payload[1];
+                    state.loadMore = action.payload[1][0].loadNext;
+                }else {
                     state.reddits = state.reddits.concat(action.payload[1]);
-                    state.loadMore = state.loadMore.concat(action.payload[1][0].loadNext);
+                    state.loadMore = action.payload[1][0].loadNext;
                 }
-
             })
             .addCase(loadReddits.rejected, (state) => {
                 state.isLoadingReddits = false;
@@ -79,7 +103,7 @@ const redditsSlice = createSlice({
     }
 });
 
-export const { navigateBack, resetSingleReddit } = redditsSlice.actions; 
+export const { resetSingleReddit, resetReddits } = redditsSlice.actions; 
 export const selectReddits = (state) => state.reddits.reddits;
 export const selectSingleReddit = (state) => state.reddits.singleReddit;
 export const selectIsLoading = (state) => state.reddits.isLoadingReddits;

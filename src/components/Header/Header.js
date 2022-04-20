@@ -1,6 +1,6 @@
 import './Header.css';
 import logo from '../../fooddit.png';
-import { Search } from './Search';
+import { SearchBar } from './SearchBar';
 import { useState } from "react";
 
 export default function Header() {
@@ -14,7 +14,7 @@ export default function Header() {
         <nav>
             {<img src={logo} className="logo" alt="my reddit logo" />}
             {/* <h2 id="page-heading"><span onClick={() => handleClick()} className={`heading-border${titleToggle ? " title-on" : ""}`}>Fooddit</span></h2> */}
-            <Search />
+            <SearchBar/>
         </nav>
     );
 }

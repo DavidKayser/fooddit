@@ -13,32 +13,34 @@ const RedditSingle = () => {
     const reddits = useSelector(selectReddits);
     const single = useSelector(selectSingleReddit);
     let singleReddit;
-    if (reddits.length > 0) {
-        const getReddit = reddits.filter(reddit => reddit.id === id);
+    const getReddit = reddits.filter(reddit => reddit.id === id);
+    if (reddits.length > 0 && getReddit.length > 0) {
         singleReddit = getReddit[0];
     } else {
         singleReddit = single;
     }
     
-
     useEffect(() => {
         document.body.style.overflow = 'hidden';
         if (reddits.length <= 0) {
-            dispatch(loadReddits({link: `/r/food/comments/${id}/${title}.json`, isSingle: true}));
+            console.log("single");
+            dispatch(loadReddits({link: `/r/food/comments/${id}/${title}.json`, queryType: "single"}));
         }
-    }, []);
+    }, [id, title, reddits.length, dispatch]);
 
     function onDismiss(event) {
         event.preventDefault();
         
         if(event.target === event.currentTarget) {
             document.body.style.overflow = 'unset';
+            dispatch(resetSingleReddit());
+
             if (reddits.length <= 0) {
                 navigate("/");
                 return;
             }
             navigate(-1);
-            dispatch(resetSingleReddit());
+            console.log("clear");
         }
     }
     

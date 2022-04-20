@@ -7,15 +7,12 @@ import { timeConverter } from "../../utils/timeConverter";
 
 const Comments = ({commentsLink}) => {
     const dispatch = useDispatch();
-    const singleReddit = useSelector(selectSingleReddit);
     const comments = useSelector(selectComments);
     const [replyToClose, setReplyToClose] = useState([]);
     
     useEffect(() => {
-        if(singleReddit) {
-            dispatch(loadComments(`${commentsLink}.json`));
-        }
-    }, [dispatch]);
+        dispatch(loadComments(`${commentsLink}.json`));
+    }, [dispatch, commentsLink]);
 
     function hideComments(id) {
         if (replyToClose.includes(id)) {
