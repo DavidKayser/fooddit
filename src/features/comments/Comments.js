@@ -9,10 +9,12 @@ const Comments = ({commentsLink}) => {
     const comments = useSelector(selectComments);
     const [replyToClose, setReplyToClose] = useState([]);
     
+    //load comments
     useEffect(() => {
         dispatch(loadComments(`${commentsLink}.json`));
     }, [dispatch, commentsLink]);
 
+    //hide and show comments on click
     function hideComments(id) {
         if (replyToClose.includes(id)) {
             const updateReplies = replyToClose.filter(reply => reply !== id);
@@ -25,30 +27,29 @@ const Comments = ({commentsLink}) => {
     function loadSubComments(item) {
         if(item.subComments) {
             const subComment = Object.values(item.subComments).map((comment, index) => (
-                
-                    <ul className="comment-group sub-comments" key={comment.postedOn}>
-                        <li className={ replyToClose.includes(comment.postedOn) ? "expand-reply-icon" : "hide-reply-icon" } onClick={() => hideComments(comment.postedOn)} >
-                            <article className="comments sub-comment" >   
-                                <div className="comment-header">
-                                    <p className="float-left">{comment.name}</p>
-                                    <p className="reply-posted float-left">
-                                        <span className="reply-time">{timeConverter(comment.postedOn)[0]}</span>
-                                        {timeConverter(comment.postedOn)[1] && (
-                                            <span className="full-date">{timeConverter(comment.postedOn)[1]}</span>
-                                        )}
-                                    </p>
-                                </div>
-                                <p>{comment.body}</p>
-                                <div className="comment-footer">
-                                    <p className="up-votes reply-reaction float-left">{comment.upVotes}</p>
-                                    <p className="down-votes reply-reaction float-left">{comment.downVotes}</p>
-                                </div>
-                            </article>
-                        </li>
-                        {comment.subComments.length > 0 && (
-                            <li className={replyToClose.includes(comment.postedOn) ? "hide-replies" : null }>{loadSubComments(comment)}</li>
-                        )}
-                    </ul>
+                <ul className="comment-group sub-comments" key={comment.postedOn}>
+                    <li className={ replyToClose.includes(comment.postedOn) ? "expand-reply-icon" : "hide-reply-icon" } onClick={() => hideComments(comment.postedOn)} >
+                        <article className="comments sub-comment" >   
+                            <div className="comment-header">
+                                <p className="float-left">{comment.name}</p>
+                                <p className="reply-posted float-left">
+                                    <span className="reply-time">{timeConverter(comment.postedOn)[0]}</span>
+                                    {timeConverter(comment.postedOn)[1] && (
+                                        <span className="full-date">{timeConverter(comment.postedOn)[1]}</span>
+                                    )}
+                                </p>
+                            </div>
+                            <p>{comment.body}</p>
+                            <div className="comment-footer">
+                                <p className="up-votes reply-reaction float-left">{comment.upVotes}</p>
+                                <p className="down-votes reply-reaction float-left">{comment.downVotes}</p>
+                            </div>
+                        </article>
+                    </li>
+                    {comment.subComments.length > 0 && (
+                        <li className={replyToClose.includes(comment.postedOn) ? "hide-replies" : null }>{loadSubComments(comment)}</li>
+                    )}
+                </ul>
             ));
             return subComment;
         } else {

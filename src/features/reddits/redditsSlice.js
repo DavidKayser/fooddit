@@ -26,16 +26,16 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
         default:
             console.log("could not get queryType");
     }
-    let loadNext = response.data.after;
+    let loadNext = ""
 
     let posts;
 
     if (queryType === "single") {
         posts = response[0].data.children;
     } else {
-        // if (response.data.after !== null) {
-        //     loadNext = response.data.after;
-        // }
+        if (response.data.after !== null) {
+            loadNext = response.data.after;
+        } else loadNext = "none";
         posts = response.data.children;
     } 
     //filter posts without images
@@ -77,6 +77,8 @@ const redditsSlice = createSlice({
         },
         resetReddits: (state) => {
             state.reddits = [];
+            console.log("success reset");
+
         },
         filterReddits: (state, action) => {
             state.filter = action.payload;
@@ -94,10 +96,7 @@ const redditsSlice = createSlice({
                 state.failedToLoadReddits = false;
                 if (action.payload[0] === "single") {
                     state.singleReddit = action.payload[1][0];
-                } else if (action.payload[0] === "search"){
-                    state.reddits = action.payload[1];
-                    state.loadMore = action.payload[1][0].loadNext;
-                }else {
+                } else {
                     state.reddits = state.reddits.concat(action.payload[1]);
                     state.loadMore = action.payload[1][0].loadNext;
                 }

@@ -37,7 +37,7 @@
 
 .comments-list > .comment-group {
     border:none;
-    padding-left:0;
+    padding-left:5px;
 }
 
 .hide-replies {
@@ -45,7 +45,7 @@
 }
 
 .expand-reply-icon, .hide-reply-icon {
-    margin-left:20px;
+    margin-left:11px;
     position: relative;
 }
 
@@ -56,7 +56,7 @@
     height:10px;
     width:10px;
     position: absolute;
-    left: -24px;
+    left: -15px;
     top: calc(50% - 5px);
 }
 
@@ -67,7 +67,7 @@
     height:10px;
     width:10px;
     position: absolute;
-    left: -24px;
+    left: -15px;
     top: calc(50% - 5px);
     transform: rotate(180deg);
 }

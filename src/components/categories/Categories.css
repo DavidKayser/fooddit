@@ -1,61 +1,53 @@
 #flairs {
     margin: 10px;
     box-shadow: 0 0 9px 1px #807e72;
-    border-radius:5px
+    border-radius:5px;
 }
 
-.subreddit-list {
+ul.subreddit-list {
     background:white;
-    padding:15px;
+    padding:5px;
     margin:0 auto 10px;
     border-right: 1px solid #8a8a8a;
     border-bottom: 1px solid #8a8a8a;
     border-left: 1px solid #8a8a8a;
-    border-radius:0 0 5px 5px;
+    border-radius:5px;
 }
 
 #filter-title {
-    background:#FF4500;
-    border-top: 1px solid #8a8a8a;
-    border-right: 1px solid #8a8a8a;
-    border-left: 1px solid #8a8a8a;
-    color:white;
-    max-width:100%;
-    margin:0;
-    padding:5px 10px;
-    border-radius: 5px 5px 0 0;
-}
-
-ul.subreddit-list {
-    padding:0;
+    color:black;
+    display:inline-block;
+    padding:0 10px;
+    font-weight:bold;
 }
 
 li.filter {
-    background:rgb(190, 209, 194);
-    color:black;
+    background:white;
+    color:#0079d3;
     text-align:center;
     list-style: none;
-    padding:5px 8px;
+    padding:5px 18px;
     margin:5px;
-    border:1px solid black;
+    border:1px solid #0079d3;
     border-radius:20px;
     display:inline-block;
     cursor: pointer;
     text-transform: capitalize;
     font-size:15px;
+    font-weight:bold;
 }
 
 li.filter:hover {
-    background:rgb(147, 180, 154);
+    background:#eff5fa;
 }
 
 li.filter.active {
     color:white;
-    background: rgb(25, 49, 29);
+    background: #0079d3;
 }
 
 li.filter.active:hover {
-    background: rgb(34, 93, 83); 
+    background: #4b99d4;
 }
 
 li.filter.active:after {
@@ -66,7 +58,8 @@ li.filter.active:after {
     border:1px solid white;
     border-radius:100%;
     position: relative;
-    top:-4px;
+    top:-3px;
+    right:-7px;
 }
 
 li.filter.inactive {

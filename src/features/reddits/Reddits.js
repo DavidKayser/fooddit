@@ -2,39 +2,47 @@ import React from 'react';
 import { Link, useParams, useSearchParams, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectReddits, selectIsLoading, selectLoadMore, selectRedditFilter, loadReddits, resetReddits } from "./redditsSlice";
-import "./Reddits.css";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "../../components/loading/Loading";
-import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
+import Masonry, {ResponsiveMasonry} from "react-responsive-masonry";
+import { timeConverter } from "../../utils/timeConverter";
+import "./Reddits.css";
 
 const Reddits = () => {
     const dispatch = useDispatch();
     const location = useLocation();
-    
+    let [searchParams] = useSearchParams();
+    let search = searchParams.get("search");
     let reddits = useSelector(selectReddits);
     const isLoading = useSelector(selectIsLoading);
     const loadMore = useSelector(selectLoadMore);
     const redditFilter = useSelector(selectRedditFilter);
     
     const [nextToLoad, setNextToLoad] = useState("");
-    let { search } = useParams(null);
     let base;
     let tallestRefs = useRef([]);
     if (redditFilter !== null) {
         reddits = reddits.filter(reddit => reddit.flair === redditFilter);
     }
+    //THIS NEEDS TO LOAD FASTER
 
     useEffect(() => {
-        console.log("load");
-        dispatch(loadReddits({link: `/r/food.json?after=${nextToLoad}`, queryType: "full"}));
-    }, [dispatch, nextToLoad]);
-
-    useEffect(() => {
-        if (search) {
-            dispatch(resetReddits());
-            dispatch(loadReddits({link: `/r/food/search.json?q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
+        if (nextToLoad === "none") {
+            console.log("no more reddits");
+            return;
         }
-    }, [search, dispatch]);
+        if (!nextToLoad) {
+            console.log("reset");
+            dispatch(resetReddits());
+        }
+        if (search) {
+            console.log("search");
+            dispatch(loadReddits({link: `/r/food/search.json?after=${nextToLoad}&q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
+        } else {
+            console.log("load");
+            dispatch(loadReddits({link: `/r/food.json?after=${nextToLoad}`, queryType: "full"}));
+        }
+    }, [search, dispatch, nextToLoad]);
 
     useEffect(() => {
         function watchScroll() {
@@ -46,11 +54,11 @@ const Reddits = () => {
         };
     });
 
-    useEffect(() => {
-        if (reddits.length < 9) {
-            setNextToLoad(loadMore);
-        }
-    })
+    // useEffect(() => {
+    //     if (reddits.length < 9) {
+    //        setNextToLoad(loadMore);
+    //     }
+    // }, [reddits.length])
 
     //dispatch reddits
     function loadMoreReddits() {
@@ -63,10 +71,15 @@ const Reddits = () => {
     function loadOnScroll() {
         let maxHeight = 0;
         for (let i = 0; i < reddits.length; i++) {
-            const { clientHeight } = tallestRefs.current[i];
-            if (clientHeight > maxHeight) {
-                 maxHeight = clientHeight;
+            if (tallestRefs.current && tallestRefs.current.clientHeight) {
+                const { clientHeight } = tallestRefs.current[i];
+                if (clientHeight > maxHeight) {
+                     maxHeight = clientHeight;
+                }
+            } else{
+                maxHeight = 600;
             }
+
         }
         let scrollHeight, totalHeight;
         scrollHeight = document.body.scrollHeight;
@@ -90,8 +103,14 @@ const Reddits = () => {
 
     function placeHolderDimensions(width, height) {
         const ratio = height / width * 100;
-        return {
-            paddingTop: ratio + "%"
+        if (ratio === 0) {
+            return {
+                paddingTop: 0
+            }
+        } else{
+            return {
+                paddingTop: ratio + "%"
+            }
         }
     }
 
@@ -123,7 +142,12 @@ const Reddits = () => {
                             <div className="reddit-footer">
                                 <p className="float-left">{reddit.upvotes} upvotes</p>
                                 <p className="reddits-comments-icon float-left">{reddit.numberOfComments} Comments</p>
-                                <p className="float-left">{reddit.postedOn}</p>
+                                <p className="float-left">
+                                    <span className="reply-time">{timeConverter(reddit.postedOn)[0]}</span>
+                                    {timeConverter(reddit.postedOn)[1] && (
+                                        <span className="full-date">{timeConverter(reddit.postedOn)[1]}</span>
+                                    )}
+                                </p>
                             </div>
                         </article>
                     ))}

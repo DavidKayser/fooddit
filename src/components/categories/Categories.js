@@ -1,45 +1,45 @@
 import "../../features/reddits/Reddits.css";
 import { filterReddits } from "../../features/reddits/redditsSlice";
 
-import { Link, useParams, useSearchParams, useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import "./Categories.css"
 
 const Categories = () => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const filters = ["Announcement", "Recipe In Comments", "Vegetarian", "Lactose-Free", "Vegan", "Gluten-Free"];
+    const filters = ["Recipe In Comments", "Vegetarian", "Lactose-Free", "Vegan", "Gluten-Free"];
     
-    let { filter } = useParams();
-    const categoryIndex = filters.indexOf(filter);
     const [activeItem, setActiveItem] = useState();
     const [searchParams, setSearchParams] = useSearchParams();
-    
+
     useEffect(() => {
-        if (filter) {
+        if (searchParams.get("filter") !== null) {
+            const filter = searchParams.get("filter");
+            const categoryIndex = filters.indexOf(filter);
             setActiveItem(categoryIndex);
+            dispatch(filterReddits(filter));
         }
-    }, [activeItem, categoryIndex, filter])
+    });
 
     function handleClick(filter, i) {
         if (activeItem === i) {
             setActiveItem();
             dispatch(filterReddits(null));
-            setSearchParams("");
+            setSearchParams();
             console.log("remove filter")
         } else {
             setActiveItem(i);
             dispatch(filterReddits(filter));
-            setSearchParams(filter);
+            setSearchParams({filter: filter});
             console.log("set filter")
         }
     }
     
     return (
         <section id="flairs">
-            <h3 id="filter-title">Filter By Flair</h3>
             <ul className="subreddit-list">
+                <li id="filter-title">Filters:</li>
                 {filters.map((filter, index) => (
                     <li
                         key={index}
