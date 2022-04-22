@@ -1,12 +1,11 @@
 import React from 'react';
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams, useSearchParams, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { selectReddits, selectIsLoading, selectLoadMore, selectRedditFilter, loadReddits, resetReddits } from "./redditsSlice";
 import "./Reddits.css";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "../../components/loading/Loading";
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry"
-
 
 const Reddits = () => {
     const dispatch = useDispatch();
@@ -17,31 +16,25 @@ const Reddits = () => {
     const loadMore = useSelector(selectLoadMore);
     const redditFilter = useSelector(selectRedditFilter);
     
-    const [nextToLoad, setNextToLoad] = useState();
-    
-    let { filter, search } = useParams(null);
-    
-    const filteredReddits = reddits.filter(reddit => reddit.flair === filter);
+    const [nextToLoad, setNextToLoad] = useState("");
+    let { search } = useParams(null);
     let base;
     let tallestRefs = useRef([]);
-    
-    if (redditFilter) {
-        reddits = filteredReddits;
+    if (redditFilter !== null) {
+        reddits = reddits.filter(reddit => reddit.flair === redditFilter);
     }
+
+    useEffect(() => {
+        console.log("load");
+        dispatch(loadReddits({link: `/r/food.json?after=${nextToLoad}`, queryType: "full"}));
+    }, [dispatch, nextToLoad]);
+
     useEffect(() => {
         if (search) {
             dispatch(resetReddits());
             dispatch(loadReddits({link: `/r/food/search.json?q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
-        } else {
-            if (nextToLoad) {
-                console.log("two");
-                dispatch(loadReddits({link: `/r/food.json?after=${nextToLoad}`, queryType: "full"}));
-            } else {
-                console.log("one");
-                dispatch(loadReddits({link: `/r/food.json`, queryType: "full"}));
-            }
         }
-    }, [nextToLoad, search, filter, dispatch]);
+    }, [search, dispatch]);
 
     useEffect(() => {
         function watchScroll() {
@@ -52,6 +45,12 @@ const Reddits = () => {
             window.removeEventListener("scroll", loadOnScroll);
         };
     });
+
+    useEffect(() => {
+        if (reddits.length < 9) {
+            setNextToLoad(loadMore);
+        }
+    })
 
     //dispatch reddits
     function loadMoreReddits() {
@@ -109,8 +108,6 @@ const Reddits = () => {
                             <div className="reddit-header">
                                 <p className="float-left community">{reddit.subreddit}</p>
                                 <p className="float-left">Posted by {reddit.author}</p>
-                                <p className="float-left">Flair: {reddit.flair}</p>
-
                             </div>
                             <Link data-testid="single-link" to={articleRoute(reddit.singleLink, reddit.id)} state={{ backgroundLocation: location }}> 
                                 <div className="reddits-body">  

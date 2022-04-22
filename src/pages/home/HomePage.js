@@ -1,5 +1,4 @@
 import React from 'react';
-import { Outlet } from "react-router-dom";
 import './HomePage.css';
 import Reddits from '../../features/reddits/Reddits'; 
 import Categories from '../../components/categories/Categories'; 

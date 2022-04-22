@@ -65,7 +65,7 @@ const redditsSlice = createSlice({
     name: 'reddits',
     initialState: {
         reddits: [],
-        loadMore: [""],
+        loadMore: "",
         singleReddit: null,
         filter: null,
         isLoadingReddits: false,

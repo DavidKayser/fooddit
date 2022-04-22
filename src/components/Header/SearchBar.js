@@ -1,11 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { selectReddits, selectIsLoading, selectLoadMore, loadReddits } from "../../features/reddits/redditsSlice";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const SearchBar = () => {
-  const dispatch = useDispatch();
-  const history = useNavigate();
   const searchInputRef = useRef();
   const navigate = useNavigate();
 

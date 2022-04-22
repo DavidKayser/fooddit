@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { selectSingleReddit } from "../../features/reddits/redditsSlice";
 import { selectComments, loadComments } from "../../features/comments/commentsSlice";
 import "./Comments.css";
 import { timeConverter } from "../../utils/timeConverter";
