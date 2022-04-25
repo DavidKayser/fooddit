@@ -19,20 +19,24 @@ const Categories = () => {
             const categoryIndex = filters.indexOf(filter);
             setActiveItem(categoryIndex);
             dispatch(filterReddits(filter));
+            console.log("set filter");
+        } else {
+            setActiveItem();
+            console.log("remove filter");
         }
-    });
+    }, [dispatch, searchParams]);
 
     function handleClick(filter, i) {
         if (activeItem === i) {
             setActiveItem();
             dispatch(filterReddits(null));
             setSearchParams();
-            console.log("remove filter")
+            console.log("remove filter");
         } else {
             setActiveItem(i);
             dispatch(filterReddits(filter));
             setSearchParams({filter: filter});
-            console.log("set filter")
+            console.log("set filter");
         }
     }
     

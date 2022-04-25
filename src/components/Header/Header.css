@@ -6,53 +6,10 @@ nav {
     box-shadow: 0 0 9px 1px #807e72;
 }
 
-#page-heading {
-    text-align:center;
-    margin:20px auto;
-    color: rgb(114, 114, 114);
-}
-
-.heading-border {
-    display:inline-block;
-    border: 0.2rem solid rgb(183, 183, 183);
-    padding:10px 20px;
-    border-radius:10px;
-    cursor:pointer;
-    outline:1px solid rgb(114, 114, 114);
-    outline-offset:-2px;
-    text-shadow:
-        -1px -1px 0 rgb(183, 183, 183),  
-        1px -1px 0 rgb(183, 183, 183),
-        -1px 1px 0 rgb(183, 183, 183),
-        1px 1px 0 rgb(183, 183, 183);
-}
-
-.heading-border.title-on {
-    color:white;
-    border: 0.2rem solid white;
-    outline:1px solid rgb(183, 183, 183);
-    text-shadow:
-        0 0 4px #fff,
-        0 0 11px #fff,
-        0 0 19px #fff,
-        0 0 40px #00ffcc,
-        0 0 80px #00ffcc,
-        0 0 90px #00ffcc,
-        0 0 100px #00ffcc,
-        0 0 150px #00ffcc;
-
-    box-shadow: 
-        0 0 .2rem #fff,
-        0 0 .2rem #fff,
-        0 0 2rem #00ffcc,
-        0 0 0.8rem #00ffcc,
-        0 0 2.8rem #00ffcc,
-        inset 0 0 1.3rem #00ffcc;
-}
-
 .logo {
     height: 35px;
     width: auto;
+    cursor:pointer;
 }
 
 .search-form {

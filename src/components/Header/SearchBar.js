@@ -1,19 +1,20 @@
 import React, { useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { resetReddits } from "../../features/reddits/redditsSlice";
 
 export const SearchBar = () => {
   const searchInputRef = useRef();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-
+  const dispatch = useDispatch();
 
   const onSearchHandler = (e) => {
     e.preventDefault();
+    dispatch(resetReddits());
     const searchQuery = searchInputRef.current.value;
     const searchQueryCleaned = searchQuery.replace(/[^a-z0-9-]/g , "-");
     console.log(searchQueryCleaned);
-    setSearchParams({search: searchQueryCleaned});
-    //navigate(`/search/${searchQueryCleaned}`);
+    navigate(`/search/${searchQueryCleaned}`);
     searchInputRef.current.value = "";
   };
 

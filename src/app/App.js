@@ -4,10 +4,9 @@ import {
   Route,
   useLocation
  } from 'react-router-dom';
-import Header from '../components/header/Header';
 import HomePage from '../pages/home/HomePage';
 import RedditSingle from '../features/reddits/RedditSingle';
-
+import Header from '../components/header/Header';
 
 function App() {
   const location = useLocation();
@@ -16,13 +15,9 @@ function App() {
     <div>
       <Header />
       <Routes location={state?.backgroundLocation || location}>
-          <Route index element={<HomePage />} />
-      </Routes>
-      <Routes location={state?.backgroundLocation || location}>
-          <Route path="/filter/:filter" element={<HomePage />} />
-      </Routes>
-      <Routes location={state?.backgroundLocation || location}>
+          <Route path="/" element={<HomePage />} />
           <Route path="/search/:search" element={<HomePage />} />
+          <Route path="article/:id/:title" element={<RedditSingle />} />
       </Routes>
 
       <Routes>

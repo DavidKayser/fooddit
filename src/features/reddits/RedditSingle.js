@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { selectReddits, selectSingleReddit, selectIsLoading, loadReddits, resetSingleReddit } from "./redditsSlice";
+import { selectReddits, selectSingleReddit, loadReddits, resetSingleReddit } from "./redditsSlice";
 import Comments from "../comments/Comments";
 import { timeConverter } from "../../utils/timeConverter";
 import "./RedditSingle.css";
@@ -13,7 +13,6 @@ const RedditSingle = () => {
     let { id, title } = useParams();
     const reddits = useSelector(selectReddits);
     const single = useSelector(selectSingleReddit);
-    const isLoading = useSelector(selectIsLoading);
 
     //Only use singleReddit data if loading page direclty to save loading time
     let singleReddit;

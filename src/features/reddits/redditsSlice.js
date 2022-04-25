@@ -10,17 +10,17 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
     switch(queryType) {
         case "full":
             if (response.data.children.length <= 0) {
-                return [queryType, [{}]];
+                return [queryType, "no reddits"];
             }
             break;
         case "single":
             if (response[0].data.children.length <= 0) {
-                return [queryType, [{}]];
+                return [queryType, "no reddits"];
             }
             break;
         case "search":
             if (response.data.children.length <= 0) {
-                return [queryType, [{}]];
+                return [queryType, "no reddits"];
             }
             break;
         default:
@@ -68,6 +68,7 @@ const redditsSlice = createSlice({
         loadMore: "",
         singleReddit: null,
         filter: null,
+        noRedditsFound: false,
         isLoadingReddits: false,
         failedToLoadReddits: false
     },
@@ -77,8 +78,8 @@ const redditsSlice = createSlice({
         },
         resetReddits: (state) => {
             state.reddits = [];
-            console.log("success reset");
-
+            state.loadMore = "";
+            state.filter = null;
         },
         filterReddits: (state, action) => {
             state.filter = action.payload;
@@ -94,6 +95,12 @@ const redditsSlice = createSlice({
             .addCase(loadReddits.fulfilled, (state, action) => {
                 state.isLoadingReddits = false;
                 state.failedToLoadReddits = false;
+                if (action.payload[1] === "no reddits") {
+                    state.noRedditsFound = true;
+                    return;
+                } else {
+                    state.noRedditsFound = false;
+                }
                 if (action.payload[0] === "single") {
                     state.singleReddit = action.payload[1][0];
                 } else {
@@ -113,6 +120,7 @@ export const selectReddits = (state) => state.reddits.reddits;
 export const selectSingleReddit = (state) => state.reddits.singleReddit;
 export const selectRedditFilter = (state) => state.reddits.filter;
 export const selectIsLoading = (state) => state.reddits.isLoadingReddits;
+export const selectNoRedditsFound = (state) => state.reddits.noRedditsFound;
 export const selectLoadMore = (state) => state.reddits.loadMore;
 
 export default redditsSlice.reducer;
