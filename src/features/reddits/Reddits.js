@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useParams, useSearchParams, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { selectReddits, selectIsLoading, selectLoadMore, selectRedditFilter, selectNoRedditsFound, loadReddits } from "./redditsSlice";
+import { selectReddits, selectIsLoading, selectLoadMore, selectNoRedditsFound, selectIsLoadingFilter, loadReddits, changeLoadingStatus } from "./redditsSlice";
 import { useEffect, useState, useRef } from "react";
 import { Loading } from "../../components/loading/Loading";
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry";
@@ -13,21 +13,21 @@ const Reddits = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const isLoading = useSelector(selectIsLoading);
+    const isLoadingFilter = useSelector(selectIsLoadingFilter);
     const loadMore = useSelector(selectLoadMore);
-    const redditFilter = useSelector(selectRedditFilter);
     const noRedditsFound = useSelector(selectNoRedditsFound);
 
     let reddits = useSelector(selectReddits);
     let base;
     let { search } = useParams();
     let [searchParams] = useSearchParams();
-    //let search = searchParams.get("search");
     let filter = searchParams.get("filter");
     const [nextToLoad, setNextToLoad] = useState("");
     const [nextSearchToLoad, setNextSearchToLoad] = useState("");
     const [filteredReddits, setFilteredReddits] = useState(reddits);
 
     let tallestRefs = useRef([]);
+    
     useEffect(() => {
         if (search) {
             if (nextSearchToLoad === "") {
@@ -53,14 +53,31 @@ const Reddits = () => {
         }   
     }, [search, dispatch, nextToLoad]);
 
-    //filter reddits
+    //remove filter
     useEffect(() => {
         if (filter === null) {
             setFilteredReddits(reddits);
-        } else {
-            setFilteredReddits(reddits.filter(reddit => reddit.flair === redditFilter));
+            dispatch(changeLoadingStatus(false));
         }
-    }, [redditFilter, reddits, filter]);
+    }, [filter, reddits, dispatch]);
+
+    //filter reddits
+    useEffect(() => {
+            if (filter !== null) {
+                console.log("filter time")
+                //use for loop instead of filter for faster processing
+                let arrayData = [];
+                for (let i = 0; i < reddits.length; i++) {
+                    if (reddits[i].flair === filter) {
+                        arrayData.push(reddits[i]);
+                    }
+                }
+                setFilteredReddits(arrayData);
+                dispatch(changeLoadingStatus(false));
+            }
+
+        }, [reddits, filter, dispatch]);
+
 
     //add scroll watch to load more
     useEffect(() => {
@@ -136,46 +153,46 @@ const Reddits = () => {
     return (
         <section className="main-content">
             <div id="reddits-previews">
-            {noRedditsFound && (
+            {(noRedditsFound || filteredReddits <= 0)  && !isLoading && (
                 <NotFound />
             )}
-            {reddits && !noRedditsFound &&(
+            {reddits && !noRedditsFound && (
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{350: 1, 750: 2, 900: 3}}
                 >
                     <Masonry>
-                    {filteredReddits.map((reddit, index) => (
-                        <article className="reddits-article" key={index} ref={(element) => {tallestRefs.current[index] = element}}>
-                            <div className="reddit-header">
-                                <p className="float-left community">{reddit.subreddit}</p>
-                                <p className="float-left">Posted by {reddit.author}</p>
-                            </div>
-                            <Link data-testid="single-link" to={articleRoute(reddit.singleLink, reddit.id)} state={{ backgroundLocation: location }}> 
-                                <div className="reddits-body">  
-                                    <h3 className="reddits-title">{reddit.title}</h3>
-                                    <div className="image-wrapper" style={placeHolderDimensions(reddit.mediaDimensions.width, reddit.mediaDimensions.height)}>
-                                        <img className="reddits-image" src={reddit.media} alt="media" />
+                        {filteredReddits.map((reddit, index) => (
+                                <article style={isLoadingFilter ? {display : "none"} : {display : "block"}} className="reddits-article" key={index} ref={(element) => {tallestRefs.current[index] = element}}>
+                                    <div className="reddit-header">
+                                        <p className="float-left community">{reddit.subreddit}</p>
+                                        <p className="float-left">Posted by {reddit.author}</p>
                                     </div>
-                                </div>
-                            </Link>
-                            {reddit.mediaType === "link" && (
-                                <a href={reddit.media} target="_blank" rel="noreferrer">LINK</a>
-                            )}
-                            <div className="reddit-footer">
-                                <p className="float-left">{reddit.upvotes} upvotes</p>
-                                <p className="reddits-comments-icon float-left">{reddit.numberOfComments} Comments</p>
-                                <p className="float-left">
-                                    <span className="reply-time">{timeConverter(reddit.postedOn)[0]}</span>
-                                    {timeConverter(reddit.postedOn)[1] && (
-                                        <span className="full-date">{timeConverter(reddit.postedOn)[1]}</span>
+                                    <Link data-testid="single-link" to={articleRoute(reddit.singleLink, reddit.id)} state={{ backgroundLocation: location }}> 
+                                        <div className="reddits-body">  
+                                            <h3 className="reddits-title">{reddit.title}</h3>
+                                            <div className="image-wrapper" style={placeHolderDimensions(reddit.mediaDimensions.width, reddit.mediaDimensions.height)}>
+                                                <img className="reddits-image" src={reddit.media} key={reddit.media} alt="media" />
+                                            </div>
+                                        </div>
+                                    </Link>
+                                    {reddit.mediaType === "link" && (
+                                        <a href={reddit.media} target="_blank" rel="noreferrer">LINK</a>
                                     )}
-                                </p>
-                            </div>
-                        </article>
-                    ))}
-                    {isLoading && <Loading />}
-                    {isLoading && <Loading />}
-                    {isLoading && <Loading />}
+                                    <div className="reddit-footer">
+                                        <p className="float-left">{reddit.upvotes} upvotes</p>
+                                        <p className="reddits-comments-icon float-left">{reddit.numberOfComments} Comments</p>
+                                        <p className="float-left">
+                                            <span className="reply-time">{timeConverter(reddit.postedOn)[0]}</span>
+                                            {timeConverter(reddit.postedOn)[1] && (
+                                                <span className="full-date">{timeConverter(reddit.postedOn)[1]}</span>
+                                            )}
+                                        </p>
+                                    </div>
+                                </article>
+                        ))}
+                    {(isLoading || isLoadingFilter) && <Loading />}
+                    {(isLoading || isLoadingFilter) && <Loading />}
+                    {(isLoading || isLoadingFilter) && <Loading />}
                     </Masonry>
             </ResponsiveMasonry>
             )}

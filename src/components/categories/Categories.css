@@ -1,20 +1,24 @@
 #flairs {
-    margin: 10px;
-    box-shadow: 0 0 9px 1px #807e72;
-    border-radius:5px;
+
 }
 
 ul.subreddit-list {
     background:white;
+    margin: 10px;
     padding:5px;
-    margin:0 auto 10px;
-    border-right: 1px solid #8a8a8a;
-    border-bottom: 1px solid #8a8a8a;
-    border-left: 1px solid #8a8a8a;
+    border: 1px solid #cfcfbb;
     border-radius:5px;
+    box-shadow: 0 0 9px 1px #807e72;
 }
 
 #filter-title {
+    color:black;
+    display:inline-block;
+    padding:0 10px;
+    font-weight:bold;
+}
+
+#search-title {
     color:black;
     display:inline-block;
     padding:0 10px;

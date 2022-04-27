@@ -1,12 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import redditApi from '../../api/reddit-api';
 
-
 //Run API call and trim function
 export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadData) => {
     const {link, queryType } = loadData;
     const response = await redditApi(link);
-    
+
     switch(queryType) {
         case "full":
             if (response.data.children.length <= 0) {
@@ -27,7 +26,6 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
             console.log("could not get queryType");
     }
     let loadNext = ""
-
     let posts;
 
     if (queryType === "single") {
@@ -40,7 +38,7 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
     } 
     //filter posts without images
     const filteredPosts = posts.filter(post => post.data.post_hint === "image");
-    const trimmedReddit = filteredPosts.map((reddit) => {
+    const trimmedReddits = filteredPosts.map((reddit) => {
         const postData = {
             loadNext: loadNext,
             id: reddit.data.id,
@@ -58,7 +56,7 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
         }
         return postData;
     });
-    return [queryType, trimmedReddit];
+    return [queryType, trimmedReddits];
 });
 
 const redditsSlice = createSlice({
@@ -67,10 +65,10 @@ const redditsSlice = createSlice({
         reddits: [],
         loadMore: "",
         singleReddit: null,
-        filter: null,
         noRedditsFound: false,
         isLoadingReddits: false,
-        failedToLoadReddits: false
+        failedToLoadReddits: false,
+        isLoadingFilter: false
     },
     reducers: {
         resetSingleReddit: (state) => {
@@ -81,8 +79,8 @@ const redditsSlice = createSlice({
             state.loadMore = "";
             state.filter = null;
         },
-        filterReddits: (state, action) => {
-            state.filter = action.payload;
+        changeLoadingStatus: (state, action) => {
+            state.isLoadingFilter = action.payload;
         }
     },
     extraReducers: builder => {
@@ -115,12 +113,11 @@ const redditsSlice = createSlice({
     }
 });
 
-export const { resetSingleReddit, resetReddits, filterReddits } = redditsSlice.actions; 
+export const { resetSingleReddit, resetReddits, removeLoading, changeLoadingStatus } = redditsSlice.actions; 
 export const selectReddits = (state) => state.reddits.reddits;
 export const selectSingleReddit = (state) => state.reddits.singleReddit;
-export const selectRedditFilter = (state) => state.reddits.filter;
 export const selectIsLoading = (state) => state.reddits.isLoadingReddits;
+export const selectIsLoadingFilter = (state) => state.reddits.isLoadingFilter;
 export const selectNoRedditsFound = (state) => state.reddits.noRedditsFound;
 export const selectLoadMore = (state) => state.reddits.loadMore;
-
 export default redditsSlice.reducer;

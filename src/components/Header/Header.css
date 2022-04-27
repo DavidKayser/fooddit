@@ -4,28 +4,34 @@ nav {
     margin-bottom:10px;
     background:white;
     box-shadow: 0 0 9px 1px #807e72;
+    overflow:hidden;
 }
 
 .logo {
-    height: 35px;
+    height: 36px;
     width: auto;
     cursor:pointer;
+    float:left;
+    display:block;
+    font-size:0;
 }
 
 .search-form {
     width: 30%;
-    min-width: 200px;
+    min-width: 100px;
     position: relative;
     left: -45px;
     float:right;
+    margin: 5px 0;
 }
 
 .search {
    width: 100%;
-   padding: 5px 5px 5px 40px;
-   margin:5px 0;
+   padding: 4px 4px 4px 40px;
+   margin:0;
    border: 1px solid grey;
    border-radius: 20px;
    background: white url('../../media/magnifying-glass.png') no-repeat 10px center;
    background-size:15px;
+   font-size:14px;
 }
