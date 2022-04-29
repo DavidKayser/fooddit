@@ -7,6 +7,7 @@ import { Loading } from "../../components/loading/Loading";
 import Masonry, {ResponsiveMasonry} from "react-responsive-masonry";
 import { timeConverter } from "../../utils/timeConverter";
 import { NotFound } from "../../components/notFound/NotFound";
+import logo from '../../fooddit.png';
 import "./Reddits.css";
 
 const Reddits = () => {
@@ -25,6 +26,7 @@ const Reddits = () => {
     const [nextToLoad, setNextToLoad] = useState("");
     const [nextSearchToLoad, setNextSearchToLoad] = useState("");
     const [filteredReddits, setFilteredReddits] = useState(reddits);
+    const [noMoreReddits, setNoMoreReddits] = useState(false);
 
     let tallestRefs = useRef([]);
     
@@ -38,13 +40,13 @@ const Reddits = () => {
                 dispatch(loadReddits({link: `/r/food/search.json?after=${nextSearchToLoad}&q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
             }
         }
-
     }, [search, dispatch, nextSearchToLoad]);
 
     //load reddits
     useEffect(() => {
         if (nextToLoad === "none") {
             console.log("no more reddits");
+            setNoMoreReddits(true);
             return;
         }
         if (!search) {
@@ -81,12 +83,10 @@ const Reddits = () => {
 
     //add scroll watch to load more
     useEffect(() => {
-        function watchScroll() {
-            window.addEventListener("scroll", loadOnScroll);
-        }
-        watchScroll();
+        document.addEventListener("scroll", loadOnScroll);
+        
         return () => {
-            window.removeEventListener("scroll", loadOnScroll);
+            document.removeEventListener("scroll", loadOnScroll);
         };
     });
 
@@ -106,23 +106,24 @@ const Reddits = () => {
     function loadOnScroll() {
         let maxHeight = 0;
         for (let i = 0; i < reddits.length; i++) {
-            if (tallestRefs.current && tallestRefs.current.clientHeight) {
+            if (tallestRefs.current[i]) {
                 const { clientHeight } = tallestRefs.current[i];
                 if (clientHeight > maxHeight) {
-                     maxHeight = clientHeight;
+                        maxHeight = clientHeight;
                 }
             } else{
-                maxHeight = 600;
+                maxHeight = 900;
             }
-
         }
+
         let scrollHeight, totalHeight;
         scrollHeight = document.body.scrollHeight;
         totalHeight = window.scrollY + window.innerHeight;
+
         if (totalHeight <= scrollHeight - maxHeight * 2) {
             base = false
         }
-        if (totalHeight >= scrollHeight - maxHeight * 2) {
+        if (totalHeight > scrollHeight - maxHeight * 2) {
             if (base === true) return;
             loadMoreReddits();
             base = true
@@ -150,6 +151,11 @@ const Reddits = () => {
         }
     }
 
+    function scrollToTop() {
+        console.log("her")
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     return (
         <section className="main-content">
             <div id="reddits-previews">
@@ -171,7 +177,7 @@ const Reddits = () => {
                                         <div className="reddits-body">  
                                             <h3 className="reddits-title">{reddit.title}</h3>
                                             <div className="image-wrapper" style={placeHolderDimensions(reddit.mediaDimensions.width, reddit.mediaDimensions.height)}>
-                                                <img className="reddits-image" src={reddit.media} key={reddit.media} alt="media" />
+                                                <img className="reddits-image" src={reddit.media} key={reddit.title} alt="media" />
                                             </div>
                                         </div>
                                     </Link>
@@ -197,6 +203,14 @@ const Reddits = () => {
             </ResponsiveMasonry>
             )}
             </div>
+            {noMoreReddits && (
+                <div onClick={() => scrollToTop()} id="no-more-posts">
+                    <h3>You have reached the end...</h3>
+                    <p>^^ click here to return to the top of the page ^^</p>
+                    <img src={logo} className="logo-footer" alt="fooddit logo" />
+
+                </div>
+            )}
         </section>
     );
 }

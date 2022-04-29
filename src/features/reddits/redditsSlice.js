@@ -5,7 +5,6 @@ import redditApi from '../../api/reddit-api';
 export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadData) => {
     const {link, queryType } = loadData;
     const response = await redditApi(link);
-
     switch(queryType) {
         case "full":
             if (response.data.children.length <= 0) {
@@ -39,14 +38,20 @@ export const loadReddits = createAsyncThunk('reddits/loadReddits', async (loadDa
     //filter posts without images
     const filteredPosts = posts.filter(post => post.data.post_hint === "image");
     const trimmedReddits = filteredPosts.map((reddit) => {
+        const imageResolutions = reddit.data.preview.images[0].resolutions;
+        const mediumImageData = imageResolutions[imageResolutions.length - 2];
+
+        const mediumImage = mediumImageData.url.replace(/&amp;/g, '&');
+
+        const mediumImageResolution = {width: mediumImageData.width, height: mediumImageData.height};
         const postData = {
             loadNext: loadNext,
             id: reddit.data.id,
             subreddit: reddit.data.subreddit_name_prefixed,
             title: reddit.data.title,
             mediaType: reddit.data.post_hint,
-            media: reddit.data.url_overridden_by_dest,
-            mediaDimensions: {width: reddit.data.preview.images[0].source.width, height: reddit.data.preview.images[0].source.height},
+            media: mediumImage,
+            mediaDimensions: mediumImageResolution,
             author: reddit.data.author,
             upvotes: reddit.data.ups,
             postedOn: reddit.data.created_utc,

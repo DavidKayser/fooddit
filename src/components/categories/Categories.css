@@ -25,6 +25,14 @@ ul.subreddit-list {
     font-weight:bold;
 }
 
+#filter-image {
+    display:none;
+    background: url('../../media/filter.png') no-repeat;
+    background-size:20px;
+    width:20px;
+    height:20px;
+}
+
 li.filter {
     background:white;
     color:#0079d3;
@@ -72,4 +80,46 @@ li.filter.inactive {
 
 li.filter.active.inactive {
     display:block;
+}
+
+.filter-fixed {
+    position:fixed;
+    z-index:1;
+    background:white;
+    border:2px solid #0079d3;
+    padding:8px;
+    border-radius:100%;
+    box-shadow:0 0 8px 0 #001e35;
+    top:10px;
+    left:10px;
+    cursor:pointer;
+}
+
+.filter-fixed .subreddit-list {
+    margin:0;
+    background:none;
+    border:none;
+    box-shadow:none;
+    padding:0;
+}
+
+.filter-fixed #filter-image{
+    display:block;
+}
+
+.filter-fixed .subreddit-list li:not(:first-child), .filter-fixed #filter-title, .filter-fixed #searchList{
+    display:none;
+}
+
+.expand-filters {
+    border-radius:0!important;
+}
+
+.expand-filters.filter-fixed #filter-image {
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.expand-filters .subreddit-list li:not(:first-child), .expand-filters #filter-title, .expand-filters  #searchList {
+    display:inline-block!important;
 }

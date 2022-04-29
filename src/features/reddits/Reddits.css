@@ -88,7 +88,33 @@
     position:relative;
     background: linear-gradient(to right, #efbbf6b6 0, #a6f1b0b8 100%);
 }
-  
+
+
+#on-scroll-to-bottom {
+    min-height: 50vh;
+    width:100%;
+    position:absolute;
+    background-color: red;
+    bottom:0;
+}
+
+#no-more-posts{
+    text-align:center;
+    margin: 100px 0 0;
+    cursor:pointer;
+    background:#0079d3;
+    padding:40px 0;
+    color:white;
+    width:100vw;
+    left:0;
+    position:absolute;
+}
+
+.logo-footer{
+    width:100px;
+    height:auto;
+}
+
 @media only screen and (min-width: 751px) {
     .reddits-article {
         border-radius:5px;

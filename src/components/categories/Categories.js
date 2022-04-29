@@ -10,6 +10,9 @@ const Categories = () => {
     const navigate = useNavigate();
     const filters = ["Recipe In Comments", "Vegetarian", "Lactose-Free", "Vegan", "Gluten-Free"];
     const [activeItem, setActiveItem] = useState("none");
+    const [filterHover, setFilterHover] = useState(false);
+    const [expandFilters, setExpandFilters] = useState(false);
+
     const [searchParams, setSearchParams] = useSearchParams();
     const filter = searchParams.get("filter");
     const categoryIndex = filters.indexOf(filter);
@@ -24,10 +27,28 @@ const Categories = () => {
         }
     }, [dispatch, searchParams, categoryIndex, filter]);
 
+    //add scroll watch to fix filters in place
+    useEffect(() => {
+        document.addEventListener("scroll", filterPositionFixed);
+        
+        return () => {
+            document.removeEventListener("scroll", filterPositionFixed);
+        };
+    });
+
+    const filterPositionFixed = () => {
+        if (window.scrollY > 100) {
+            setFilterHover(true);
+        } else {
+            setFilterHover(false);
+        }
+    }
+
     //set and unset filter
-    function handleFilterClick(filter, i) {
+    function handleFiltering(filter, i) {
         if (activeItem === i) {
-            if (reddits.length > 300) {
+            console.log(reddits.length)
+            if (reddits.length > 400) {
                 resetApp();
             }
             setActiveItem("none");
@@ -47,23 +68,29 @@ const Categories = () => {
         navigate("/");
         navigate(0);
     }
+
+    const handleFilterImageClick = () => {
+        setExpandFilters(!expandFilters);
+    }
     
     return (
-        <section id="filtering">
+        <section id="filtering" className={`${filterHover ? "filter-fixed" : ""} ${expandFilters ? "expand-filters" : ""}`}>
+            
             <ul className="subreddit-list">
+                <li id="filter-image" onClick={handleFilterImageClick}></li>
                 <li id="filter-title">Filters:</li>
                 {filters.map((filter, index) => (
                     <li
                         key={filter}
                         className={`filter${activeItem === index ? " active" : "" }${activeItem !== "none" && activeItem !== index ? " inactive" : ""}`}
-                        onClick={() => handleFilterClick(filter, index)}
+                        onClick={() => handleFiltering(filter, index)}
                     >
                         {filter}
                     </li>
                 ))}
             </ul>
             {search && (
-                <ul className="subreddit-list">
+                <ul id="searchList" className="subreddit-list">
                     <li id="search-title">Search:</li>
                     <li id="search-term" className="filter active" onClick={() => resetApp()}>{search}</li>
                 </ul>

@@ -63,8 +63,8 @@ const RedditSingle = () => {
                         </div>
                         <h3>{singleReddit.title}</h3>
                         <div className="reddit-body">
-                            <img className="reddit-portrait-image" src={singleReddit.media} alt="media" />
-                            <img className="reddit-image" src={singleReddit.media} alt="media" />
+                            <img className="reddit-portrait-image" src={singleReddit.media} alt={singleReddit.title} />
+                            <img className="reddit-image" src={singleReddit.media} alt={singleReddit.title} />
                         </div>
                         <div className="reddit-footer">
                             <p className="float-left">{singleReddit.upvotes} upvotes</p>

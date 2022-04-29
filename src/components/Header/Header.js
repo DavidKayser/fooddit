@@ -13,7 +13,7 @@ export default function Header() {
 
     return (
         <nav>
-        {<img src={logo} className="logo" alt="my reddit logo" onClick={() => handleClick()} />}
+        {<img src={logo} className="logo" alt="fooddit logo" onClick={() => handleClick()} />}
         <SearchBar/>
         </nav>
     );

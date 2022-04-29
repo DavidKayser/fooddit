@@ -20,9 +20,11 @@ function App() {
           <Route path="article/:id/:title" element={<RedditSingle />} />
       </Routes>
 
-      <Routes>
-        <Route path="article/:id/:title" element={<RedditSingle />} />
-      </Routes>
+      {state?.backgroundLocation && (
+        <Routes>
+          <Route path="article/:id/:title" element={<RedditSingle />} />
+        </Routes>
+      )}
 
 
 

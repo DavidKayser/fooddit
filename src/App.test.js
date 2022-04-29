@@ -12,7 +12,7 @@ describe("<App />", () => {
   it("Renders <App /> component correctly", () => {
     render(<Provider store={store}><Router><App /></Router></Provider>);
     expect(
-      screen.getByText(/welcome/i)
+      screen.getByText(/Filters/i)
     ).toBeInTheDocument();
   });
 });
