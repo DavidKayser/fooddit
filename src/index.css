@@ -4,24 +4,24 @@ body {
   font-family: 'Raleway', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-size:16px;
-  color:rgb(43, 43, 43);
+  font-size: 16px;
+  color: rgb(43, 43, 43);
 }
 
 .page {
-  width:100%;
+  width: 100%;
   margin: 0 auto;
-  overflow:hidden;
-  box-sizing:border-box;
+  overflow: hidden;
+  box-sizing: border-box;
 
 }
 
 .float-left {
-  float:left;
+  float: left;
 }
 
 .float-right {
-  float:right;
+  float: right;
 }
 
 code {
@@ -30,29 +30,29 @@ code {
 }
 
 a {
-  text-decoration:none;
-  color:rgb(43, 43, 43);
+  text-decoration: none;
+  color: rgb(43, 43, 43);
 }
 
 a:visited {
-  color:rgb(43, 43, 43);
+  color: rgb(43, 43, 43);
 }
 
 h1, h2, h3, h4 {
-  font-weight:normal;
+  font-weight: normal;
 }
 
 h1, h2 {
-  font-size:40px;
+  font-size: 40px;
 }
 
 h3, h4 {
-  font-size:20px;
+  font-size: 20px;
 }
 
 @media only screen and (min-width: 800px) {
   .page {
-    padding:0 10px;
+    padding: 0 10px;
   }
 
 }

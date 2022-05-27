@@ -17,7 +17,7 @@ const RedditSingle = () => {
     //Only use singleReddit data if loading page direclty to save loading time
     let singleReddit;
     const getReddit = reddits.filter(reddit => reddit.id === id);
-    if (reddits.length > 0 && getReddit.length > 0) {
+    if (reddits !== undefined && reddits.length > 0 && getReddit !== undefined && getReddit.length > 0) {
         singleReddit = getReddit[0];
     } else {
         singleReddit = single;
@@ -26,8 +26,7 @@ const RedditSingle = () => {
     //Dispatch single reddit if direclty loaded
     useEffect(() => {
         document.body.style.overflow = 'hidden';
-        if (reddits.length <= 0) {
-            console.log("single");
+        if (reddits.length === 0) {
             dispatch(loadReddits({link: `/r/food/comments/${id}/${title}.json`, queryType: "single"}));
         }
     }, [id, title, reddits.length, dispatch]);
@@ -35,18 +34,14 @@ const RedditSingle = () => {
 
     function onDismiss(event) {
         event.preventDefault();
-
         if(event.target === event.currentTarget) {
             document.body.style.overflow = 'unset';
-        
             dispatch(resetSingleReddit());
-            if (reddits.length <= 0) {
+            if (reddits.length === 0) {
                 navigate("/");
                 return;
             }
-
             navigate(-1);
-            console.log("clear");
         }
     }
     

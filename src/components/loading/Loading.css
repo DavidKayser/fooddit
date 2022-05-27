@@ -1,10 +1,10 @@
 .reddit-loading-article {
-  background:white;
-  padding:5px 20px;
-  border-radius:5px;
-  opacity:0.5;
-  max-width:100%;
-  margin:20px 10px;
+  background: white;
+  padding: 5px 20px;
+  border-radius: 5px;
+  opacity: 0.5;
+  max-width: 100%;
+  margin: 20px 10px;
 }
 
 div:nth-child(2) > .reddit-loading-article .reddit-loading-icon {
@@ -12,10 +12,11 @@ div:nth-child(2) > .reddit-loading-article .reddit-loading-icon {
   width: 140px;
 }
 
-.reddit-loading-header, .reddit-loading-footer {
-  min-height:40px;
-  width:100%;
-  margin:30px auto;
+.reddit-loading-header, 
+.reddit-loading-footer {
+  min-height: 40px;
+  width: 100%;
+  margin: 30px auto;
   background: linear-gradient(to left, grey 0, grey 50%, #ae87b3 60%, #85c88e 70%, grey 80%);
   background-size: 200% 100%;
   background-position: left;
@@ -23,11 +24,12 @@ div:nth-child(2) > .reddit-loading-article .reddit-loading-icon {
   animation-direction: alternate;
 }
 
-.reddit-loading-header p, .reddit-loading-footer p {
+.reddit-loading-header p, 
+.reddit-loading-footer p {
   margin: 0;
-  text-align:center;
-  line-height:40px;
-  color:#381438;
+  text-align: center;
+  line-height: 40px;
+  color: #381438;
   animation: textColorChange 1s infinite;
 }
 
@@ -36,10 +38,10 @@ div:nth-child(2) > .reddit-loading-article .reddit-loading-icon {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width:100%;
-  margin:30px auto;
-  padding:50px 20px;
-  border:5px solid gray;
+  width: 100%;
+  margin: 30px auto;
+  padding: 50px 20px;
+  border: 5px solid gray;
 }
 
 .reddit-loading-icon {

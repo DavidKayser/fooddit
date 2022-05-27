@@ -1,60 +1,56 @@
-#flairs {
-
-}
-
 ul.subreddit-list {
-    background:white;
+    background: white;
     margin: 10px;
-    padding:5px;
+    padding: 5px;
     border: 1px solid #cfcfbb;
-    border-radius:5px;
+    border-radius: 5px;
     box-shadow: 0 0 9px 1px #807e72;
 }
 
 #filter-title {
-    color:black;
-    display:inline-block;
-    padding:0 10px;
-    font-weight:bold;
+    color: black;
+    display: inline-block;
+    padding: 0 10px;
+    font-weight: bold;
 }
 
 #search-title {
-    color:black;
-    display:inline-block;
-    padding:0 10px;
-    font-weight:bold;
+    color: black;
+    display: inline-block;
+    padding: 0 10px;
+    font-weight: bold;
 }
 
 #filter-image {
-    display:none;
+    display: none;
     background: url('../../media/filter.png') no-repeat;
-    background-size:20px;
-    width:20px;
-    height:20px;
+    background-size: 20px;
+    width: 20px;
+    height: 20px;
 }
 
 li.filter {
-    background:white;
-    color:#0079d3;
-    text-align:center;
+    background: white;
+    color: #0079d3;
+    text-align: center;
     list-style: none;
-    padding:5px 18px;
-    margin:5px;
-    border:1px solid #0079d3;
-    border-radius:20px;
-    display:inline-block;
+    padding: 5px 18px;
+    margin: 5px;
+    border: 1px solid #0079d3;
+    border-radius: 20px;
+    display: inline-block;
     cursor: pointer;
     text-transform: capitalize;
-    font-size:15px;
-    font-weight:bold;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 li.filter:hover {
-    background:#eff5fa;
+    background: #eff5fa;
 }
 
 li.filter.active {
-    color:white;
+    color: white;
     background: #0079d3;
 }
 
@@ -64,62 +60,66 @@ li.filter.active:hover {
 
 li.filter.active:after {
     content: "X";
-    font-size:6px;
-    padding:2px 4px;
-    margin-left:4px;
-    border:1px solid white;
-    border-radius:100%;
+    font-size: 6px;
+    padding: 2px 4px;
+    margin-left: 4px;
+    border: 1px solid white;
+    border-radius: 100%;
     position: relative;
-    top:-3px;
-    right:-7px;
+    top: -3px;
+    right: -7px;
 }
 
 li.filter.inactive {
-    display:none;
+    display: none;
 }
 
 li.filter.active.inactive {
-    display:block;
+    display: block;
 }
 
 .filter-fixed {
-    position:fixed;
-    z-index:1;
-    background:white;
-    border:2px solid #0079d3;
-    padding:8px;
-    border-radius:100%;
-    box-shadow:0 0 8px 0 #001e35;
-    top:10px;
-    left:10px;
-    cursor:pointer;
+    position: fixed;
+    z-index: 1;
+    background: white;
+    border: 2px solid #0079d3;
+    padding: 8px;
+    border-radius: 100%;
+    box-shadow: 0 0 8px 0 #001e35;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
 }
 
 .filter-fixed .subreddit-list {
-    margin:0;
-    background:none;
-    border:none;
-    box-shadow:none;
-    padding:0;
+    margin: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 }
 
-.filter-fixed #filter-image{
-    display:block;
+.filter-fixed #filter-image {
+    display: block;
 }
 
-.filter-fixed .subreddit-list li:not(:first-child), .filter-fixed #filter-title, .filter-fixed #searchList{
-    display:none;
+.filter-fixed .subreddit-list li:not(:first-child), 
+.filter-fixed #filter-title, 
+.filter-fixed #searchList {
+    display: none;
 }
 
 .expand-filters {
-    border-radius:0!important;
+    border-radius: 0!important;
 }
 
 .expand-filters.filter-fixed #filter-image {
-    display:inline-block;
-    vertical-align:middle;
+    display: inline-block;
+    vertical-align: middle;
 }
 
-.expand-filters .subreddit-list li:not(:first-child), .expand-filters #filter-title, .expand-filters  #searchList {
-    display:inline-block!important;
+.expand-filters .subreddit-list li:not(:first-child),
+.expand-filters #filter-title, 
+.expand-filters  #searchList {
+    display: inline-block!important;
 }

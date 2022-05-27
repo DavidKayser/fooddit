@@ -4,7 +4,7 @@ const redditApi = async(link) => {
     const json = await response.json();
     return json;
     } catch (error) {
-        return error;
+        console.error(error);
     }
 };
 

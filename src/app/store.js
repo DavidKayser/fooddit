@@ -8,5 +8,3 @@ export default configureStore({
     comments: commentsReducer
   },
 });
-
-

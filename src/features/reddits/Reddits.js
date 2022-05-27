@@ -30,13 +30,12 @@ const Reddits = () => {
 
     let tallestRefs = useRef([]);
     
+    //load search based reddits
     useEffect(() => {
         if (search) {
             if (nextSearchToLoad === "") {
-                console.log("search one");
                 dispatch(loadReddits({link: `/r/food/search.json?q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
             } else {
-                console.log("search two")
                 dispatch(loadReddits({link: `/r/food/search.json?after=${nextSearchToLoad}&q=${search}&restrict_sr=1&sr_nsfw=`, queryType: "search"}));
             }
         }
@@ -45,12 +44,10 @@ const Reddits = () => {
     //load reddits
     useEffect(() => {
         if (nextToLoad === "none") {
-            console.log("no more reddits");
             setNoMoreReddits(true);
             return;
         }
         if (!search) {
-            console.log("load");
             dispatch(loadReddits({link: `/r/food.json?after=${nextToLoad}`, queryType: "full"}));
         }   
     }, [search, dispatch, nextToLoad]);
@@ -66,7 +63,6 @@ const Reddits = () => {
     //filter reddits
     useEffect(() => {
             if (filter !== null) {
-                console.log("filter time")
                 //use for loop instead of filter for faster processing
                 let arrayData = [];
                 for (let i = 0; i < reddits.length; i++) {
@@ -77,49 +73,42 @@ const Reddits = () => {
                 setFilteredReddits(arrayData);
                 dispatch(changeLoadingStatus(false));
             }
-
         }, [reddits, filter, dispatch]);
-
 
     //add scroll watch to load more
     useEffect(() => {
         document.addEventListener("scroll", loadOnScroll);
-        
         return () => {
             document.removeEventListener("scroll", loadOnScroll);
         };
     });
 
-    //dispatch reddits
     function loadMoreReddits() {
-        if (reddits[0] && !isLoading) {
+        if (reddits !== undefined && reddits.length > 0 && !isLoading) {
             if (search) {
                 setNextSearchToLoad(loadMore);
             } else {
                 setNextToLoad(loadMore);
             }
-            console.log("set next to load")
         }
     }
 
-    // load more reddits when scrolling to bottom
     function loadOnScroll() {
+        let scrollHeight, totalHeight;
+        scrollHeight = document.body.scrollHeight;
+        totalHeight = window.scrollY + window.innerHeight;
         let maxHeight = 0;
+        //calculate maxHeight
         for (let i = 0; i < reddits.length; i++) {
             if (tallestRefs.current[i]) {
                 const { clientHeight } = tallestRefs.current[i];
                 if (clientHeight > maxHeight) {
                         maxHeight = clientHeight;
                 }
-            } else{
+            } else {
                 maxHeight = 900;
             }
         }
-
-        let scrollHeight, totalHeight;
-        scrollHeight = document.body.scrollHeight;
-        totalHeight = window.scrollY + window.innerHeight;
-
         if (totalHeight <= scrollHeight - maxHeight * 2) {
             base = false
         }
@@ -130,14 +119,12 @@ const Reddits = () => {
         } 
     }
 
-    //set path for link
     function articleRoute(singleLink, id) {
         const seperateLink = singleLink.split("/");
         const title = seperateLink[seperateLink.length -2];
         return `/article/${id}/${title}`;
     }
 
-    //get dimensions for placeholder image
     function placeHolderDimensions(width, height) {
         const ratio = height / width * 100;
         if (ratio === 0) {
@@ -152,7 +139,6 @@ const Reddits = () => {
     }
 
     function scrollToTop() {
-        console.log("her")
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -163,9 +149,7 @@ const Reddits = () => {
                 <NotFound />
             )}
             {reddits && !noRedditsFound && (
-                <ResponsiveMasonry
-                    columnsCountBreakPoints={{350: 1, 750: 2, 900: 3}}
-                >
+                <ResponsiveMasonry columnsCountBreakPoints={{350: 1, 750: 2, 900: 3}}>
                     <Masonry>
                         {filteredReddits.map((reddit, index) => (
                                 <article style={isLoadingFilter ? {display : "none"} : {display : "block"}} className="reddits-article" key={index} ref={(element) => {tallestRefs.current[index] = element}}>
